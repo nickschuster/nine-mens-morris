@@ -1,2 +1,5 @@
-#handels piece logic movement
+#handels piece color
 class Piece:
+
+	def __init__(self, color):
+		self.color = color;
