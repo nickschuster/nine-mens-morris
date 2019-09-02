@@ -1,6 +1,7 @@
 #draws all game assets and handels all pygame logic
 import pygame
 from board import Board
+from piece import Piece
 
 pygame.init();
 
@@ -10,6 +11,10 @@ gameHeight = 750;
 black = (0,0,0);
 white = (255,255,255);
 red = (255, 0, 0);
+
+win = False;
+
+phase = 1;
 
 display = pygame.display.set_mode((gameHeight, gameWidth));
 
@@ -21,34 +26,57 @@ blackPiece = pygame.image.load("../assets/blackpiece.png");
 
 display.blit(boardImg, (0,0));
 
-gameBoard = Board();
-
-i = 0;
-for pos in gameBoard.XYPoints:
-	if(i < 9):
-		display.blit(whitePiece, (pos[0] - 25,pos[1] - 25));
-	elif(i < 18):
-		display.blit(blackPiece, (pos[0] - 25,pos[1] - 25));
-	else:
-		pygame.draw.circle(display, red, pos, 20);
-
-	i = i + 1
-
-pygame.display.flip();
-
 clock = pygame.time.Clock();
 
-crashed = False;
+gameBoard = Board();
 
-while not crashed:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			crashed = True;
+def updateBoard(): 
 
-		pygame.display.update();
+	for piece in gameBoard.Pieces:
+		pos = gameBoard.XYPoints[piece.location];
+		if(piece.color == "white"):
+			display.blit(whitePiece, (pos[0] - 25,pos[1] - 25));
+		else:
+			display.blit(blackPiece, (pos[0] - 25,pos[1] - 25));
 
-		clock.tick(60);
+	pygame.display.flip();
 
-pygame.quit();
+def placePiece(turn, placement):
+	i = 0
+	mouseX, mouseY = placement
+	for pos in gameBoard.XYPoints:
+		if ((mouseX <= pos[0]+10 and mouseX >= pos[0]-10) and 
+			(mouseY <= pos[1]+10 and mouseY >= pos[1]-10)):
+			newPiece = Piece(turn, i);
+			gameBoard.Pieces.append(newPiece)
+			valid = True;
+			break;
+		else: 
+			valid = False;
 
-quit();
+		i = i + 1;
+	return valid;
+
+
+
+def main():
+	turn = "white"
+	while not win:
+		for event in pygame.event.get():
+			if(event.type == pygame.QUIT):
+				pygame.quit();
+				quit();
+			elif(event.type) == pygame.MOUSEBUTTONDOWN:
+				if(event.button == 1):
+					if(phase == 1):
+						if(placePiece(turn, event.pos)):
+							if(turn == "white"):
+								turn = "black";
+							else:
+								turn = "white";
+
+			updateBoard();
+
+			clock.tick(60);
+
+main();

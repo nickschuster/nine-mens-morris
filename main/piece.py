@@ -1,5 +1,6 @@
 #handels piece color
 class Piece:
 
-	def __init__(self, color):
+	def __init__(self, color, location):
 		self.color = color;
+		self.location = location;
