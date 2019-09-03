@@ -8,6 +8,8 @@ pygame.init();
 gameWidth = 750;
 gameHeight = 750;
 
+hitBoxRadius = 15;
+
 black = (0,0,0);
 white = (255,255,255);
 red = (255, 0, 0);
@@ -43,18 +45,27 @@ def updateBoard():
 
 def placePiece(turn, placement):
 	i = 0
+	valid = False
 	mouseX, mouseY = placement
 	for pos in gameBoard.XYPoints:
-		if ((mouseX <= pos[0]+10 and mouseX >= pos[0]-10) and 
-			(mouseY <= pos[1]+10 and mouseY >= pos[1]-10)):
+		if ((mouseX <= pos[0]+hitBoxRadius and mouseX >= pos[0]-hitBoxRadius) and 
+			(mouseY <= pos[1]+hitBoxRadius and mouseY >= pos[1]-hitBoxRadius)):
 			newPiece = Piece(turn, i);
-			gameBoard.Pieces.append(newPiece)
-			valid = True;
-			break;
-		else: 
-			valid = False;
+			if len(gameBoard.Pieces) > 0:
+				for piece in gameBoard.Pieces:
+					if piece.location == newPiece.location:
+						valid = False;
+						break;
+					else:
+						valid = True;
+			else: 
+				valid = True;
 
 		i = i + 1;
+
+	if valid:
+		gameBoard.Pieces.append(newPiece);
+
 	return valid;
 
 
@@ -76,7 +87,6 @@ def main():
 								turn = "white";
 
 			updateBoard();
-
-			clock.tick(60);
+			clock.tick();
 
 main();
