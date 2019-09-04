@@ -5,14 +5,16 @@ from piece import Piece
 
 pygame.init();
 
+black = (0,0,0);
+white = (255,255,255);
+red = (255, 0, 0);
+
 gameWidth = 750;
 gameHeight = 750;
 
 hitBoxRadius = 15;
 
-black = (0,0,0);
-white = (255,255,255);
-red = (255, 0, 0);
+maxPieces = 18;
 
 win = False;
 
@@ -70,9 +72,21 @@ def placePiece(turn, placement):
 
 	return valid;
 
-def movePiece():
-	#TODO
-	return False;
+def movePiece(turn, mousePosition):
+	i = 0;
+	j = 0;
+	valid = False;
+	mouseX, mouseY = mousePosition;
+	for pos in gameBoard.XYPoints:
+		if ((mouseX <= pos[0]+hitBoxRadius and mouseX >= pos[0]-hitBoxRadius) and 
+			(mouseY <= pos[1]+hitBoxRadius and mouseY >= pos[1]-hitBoxRadius)):
+			for piece in gameBoard.Pieces:
+				if piece.location == i:
+					#Attach piece to mouse cursor
+					placed = False
+					while not placed:
+						
+
 
 #MAIN LOOP
 while not win:
@@ -82,7 +96,7 @@ while not win:
 			quit();
 		elif(event.type) == pygame.MOUSEBUTTONDOWN:
 			if(event.button == 1):
-				if len(gameBoard.Pieces) == 18:
+				if len(gameBoard.Pieces) == maxPieces:
 					phase = 2;
 
 				if(phase == 1):
@@ -93,7 +107,7 @@ while not win:
 							turn = "white";
 
 				if(phase == 2):
-					if(movePiece()):
+					if(movePiece(turn, event.pos)):
 						#TODO
 						if(turn == "white"):
 							turn = "black";
