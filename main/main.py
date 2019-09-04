@@ -18,6 +18,8 @@ win = False;
 
 phase = 1;
 
+turn = "white";
+
 display = pygame.display.set_mode((gameHeight, gameWidth));
 
 pygame.display.set_caption('Nine Men\'s Morris');
@@ -68,25 +70,35 @@ def placePiece(turn, placement):
 
 	return valid;
 
+def movePiece():
+	#TODO
+	return False;
 
+#MAIN LOOP
+while not win:
+	for event in pygame.event.get():
+		if(event.type == pygame.QUIT):
+			pygame.quit();
+			quit();
+		elif(event.type) == pygame.MOUSEBUTTONDOWN:
+			if(event.button == 1):
+				if len(gameBoard.Pieces) == 18:
+					phase = 2;
 
-def main():
-	turn = "white"
-	while not win:
-		for event in pygame.event.get():
-			if(event.type == pygame.QUIT):
-				pygame.quit();
-				quit();
-			elif(event.type) == pygame.MOUSEBUTTONDOWN:
-				if(event.button == 1):
-					if(phase == 1):
-						if(placePiece(turn, event.pos)):
-							if(turn == "white"):
-								turn = "black";
-							else:
-								turn = "white";
+				if(phase == 1):
+					if(placePiece(turn, event.pos)):
+						if(turn == "white"):
+							turn = "black";
+						else:
+							turn = "white";
 
-			updateBoard();
-			clock.tick();
-
-main();
+				if(phase == 2):
+					if(movePiece()):
+						#TODO
+						if(turn == "white"):
+							turn = "black";
+						else:
+							turn = "white";
+						
+		updateBoard();
+		clock.tick();
