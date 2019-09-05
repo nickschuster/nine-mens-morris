@@ -76,8 +76,28 @@ class Game:
 					if piece.location == i:
 						#Attach piece to mouse cursor
 						#TODO
-						placed = True
+						placed = False;
 						while not placed:
-							return False;
+							for event in pygame.event.get():
+								print(1);
+								currentMouseX, currentMouseY = pygame.mouse.get_pos();
+								self.display.blit(self.whitePiece, (currentMouseX, currentMouseY));
+								pygame.display.flip();
+								if event.type == pygame.MOUSEBUTTONDOWN:
+									if event.button == 1:
+										print(2)
+										for pos in self.gameBoard.XYPoints:
+											if ((currentMouseX <= pos[0]+self.hitBoxRadius and currentMouseX >= pos[0]-self.hitBoxRadius) and 
+												(currentMouseY <= pos[1]+self.hitBoxRadius and currentMouseY >= pos[1]-self.hitBoxRadius)): 
+													piece.locaiton = j;
+													placed = True;
+													valid = True;
 
-		return False;
+										j = j + 1;
+
+
+							
+
+			i = i + 1;
+
+		return valid;

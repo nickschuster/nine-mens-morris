@@ -24,23 +24,23 @@ game = Game(display, clock, whitePiece, blackPiece);
 #MAIN LOOP
 while not game.win:
 	for event in pygame.event.get():
-		if(event.type == pygame.QUIT):
+		if event.type == pygame.QUIT:
 			pygame.quit();
 			quit();
-		elif(event.type) == pygame.MOUSEBUTTONDOWN:
-			if(event.button == 1):
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			if event.button == 1:
 				if len(game.gameBoard.Pieces) == game.maxPieces:
 					game.phase = 2;
 
-				if(game.phase == 1):
+				if game.phase == 1:
 					if(game.placePiece(game.turn, event.pos)):
 						if(game.turn == "white"):
 							game.turn = "black";
 						else:
 							game.turn = "white";
 
-				if(game.phase == 2):
-					if(game.movePiece(game.turn, event.pos)):
+				if game.phase == 2:
+					if game.movePiece(game.turn, event.pos):
 						#TODO
 						if(game.turn == "white"):
 							game.turn = "black";
