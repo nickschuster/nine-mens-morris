@@ -5,7 +5,7 @@ from piece import Piece
 
 class Game:
 
-	def __init__(self, display, clock, whitePiece, blackPiece):
+	def __init__(self, display, clock, whitePiece, blackPiece, boardImg):
 		self.black = (0,0,0);
 		self.white = (255,255,255);
 		self.red = (255, 0, 0);
@@ -29,6 +29,8 @@ class Game:
 		self.whitePiece = whitePiece;
 
 		self.blackPiece = blackPiece;
+
+		self.boardImg = boardImg;
 
 	def placePiece(self, turn, placement):
 		i = 0
@@ -54,13 +56,9 @@ class Game:
 			i = i + 1;
 
 		if valid:
-			if(turn == "white"):
-				pieceImg = self.display.blit(self.whitePiece, (validPos[0] - 25,validPos[1] - 25));
-			else:
-				pieceImg = self.display.blit(self.blackPiece, (validPos[0] - 25,validPos[1] - 25));
-
-			newPiece = Piece(turn, location, pieceImg);
+			newPiece = Piece(turn, location);
 			self.gameBoard.Pieces.append(newPiece);
+			self.drawCurrentBoard();
 
 		return valid;
 
@@ -79,13 +77,14 @@ class Game:
 						placed = False;
 						while not placed:
 							for event in pygame.event.get():
-								print(1);
+								self.display.blit(self.boardImg, (0,0));
+								self.drawCurrentBoard(piece.location);
 								currentMouseX, currentMouseY = pygame.mouse.get_pos();
-								self.display.blit(self.whitePiece, (currentMouseX, currentMouseY));
+								self.display.blit(self.whitePiece, (currentMouseX-25, currentMouseY-25));
+								self.clock.tick(5000);
 								pygame.display.flip();
 								if event.type == pygame.MOUSEBUTTONDOWN:
 									if event.button == 1:
-										print(2)
 										for pos in self.gameBoard.XYPoints:
 											if ((currentMouseX <= pos[0]+self.hitBoxRadius and currentMouseX >= pos[0]-self.hitBoxRadius) and 
 												(currentMouseY <= pos[1]+self.hitBoxRadius and currentMouseY >= pos[1]-self.hitBoxRadius)): 
@@ -101,3 +100,21 @@ class Game:
 			i = i + 1;
 
 		return valid;
+
+	def drawCurrentBoard(self, pieceToExclude=-1):
+		i = 0;
+		for pos in self.gameBoard.XYPoints:
+			for piece in self.gameBoard.Pieces:
+				if piece.location == i:
+					if pieceToExclude != -1:
+						if piece.location != pieceToExclude:
+							if piece.color == "white":
+								self.display.blit(self.whitePiece, (pos[0]-25, pos[1]-25));
+							else:
+								self.display.blit(self.blackPiece, (pos[0]-25, pos[1]-25));
+					else:
+						if piece.color == "white":
+							self.display.blit(self.whitePiece, (pos[0]-25, pos[1]-25));
+						else:
+							self.display.blit(self.blackPiece, (pos[0]-25, pos[1]-25));
+			i = i + 1;

@@ -19,7 +19,7 @@ display.blit(boardImg, (0,0));
 
 clock = pygame.time.Clock();
 
-game = Game(display, clock, whitePiece, blackPiece);				
+game = Game(display, clock, whitePiece, blackPiece, boardImg);				
 
 #MAIN LOOP
 while not game.win:
@@ -46,6 +46,6 @@ while not game.win:
 							game.turn = "black";
 						else:
 							game.turn = "white";
-						
+			
 		pygame.display.flip();
 		clock.tick();
