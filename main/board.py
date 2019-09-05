@@ -1,4 +1,4 @@
-#handels borad logic and how pieces are kept track off 
+#tracks board details
 class Board:
 
 	def __init__(self):
