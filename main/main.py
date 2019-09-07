@@ -11,9 +11,9 @@ display = pygame.display.set_mode((gameHeight, gameWidth));
 
 pygame.display.set_caption('Nine Men\'s Morris');
 
-boardImg = pygame.image.load("../assets/ninemensboard.png");
-whitePiece = pygame.image.load("../assets/whitepiece.png");
-blackPiece = pygame.image.load("../assets/blackpiece.png");
+boardImg = pygame.image.load("../assets/ninemensboard.png").convert_alpha();
+whitePiece = pygame.image.load("../assets/whitepiece.png").convert_alpha();
+blackPiece = pygame.image.load("../assets/blackpiece.png").convert_alpha();
 
 display.blit(boardImg, (0,0));
 
