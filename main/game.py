@@ -1,172 +1,172 @@
 #game logic
-import pygame;
+import pygame
 from board import Board
 from piece import Piece
 
 class Game:
 
-	def __init__(self, display, clock, whitePiece, blackPiece, boardImg):
-		self.black = (0,0,0);
-		self.white = (255,255,255);
-		self.red = (255, 0, 0);
+    def __init__(self, display, clock, whitePiece, blackPiece, boardImg):
+        self.black = (0, 0, 0)
+        self.white = (255, 255, 255)
+        self.red = (255, 0, 0)
 
-		#The distance from the center of a valid location 
-		# the player has to click for it to be a valid move (pixels).
-		self.hitBoxRadius = 15;
+        # The distance from the center of a valid location 
+        #  the player has to click for it to be a valid move (pixels).
+        self.hitBoxRadius = 15
 
-		#A maximum of 18 pieces, 9 per player, can be on the board.
-		self.maxPieces = 18;
+        # A maximum of 18 pieces, 9 per player, can be on the board.
+        self.maxPieces = 18
 
-		#If a player has less than 3 pieces of the board they lose.
-		self.minPieces = 3;
+        # If a player has less than 3 pieces of the board they lose.
+        self.minPieces = 3
 
-		self.win = False;
+        self.win = False
 
-		#Three phases in nine mens morris. 
-		# Placement, moving and roving. Represented by 1, 2 and 3 respectively
-		self.phase = 1;
+        # Three phases in nine mens morris. 
+        #  Placement, moving and roving. Represented by 1, 2 and 3 respectively
+        self.phase = 1
 
-		#Piece sprites are exactly 50 x 50 pixels. 
-		# Images are drawn from top corner. Minus this to draw at middle.
-		self.pieceMiddle = 25;
+        # Piece sprites are exactly 50 x 50 pixels. 
+        #  Images are drawn from top corner. Minus this to draw at middle.
+        self.pieceMiddle = 25
 
-		self.turn = "white";
+        self.turn = "white"
 
-		self.gameBoard = Board();
+        self.gameBoard = Board()
 
-		self.display = display;
+        self.display = display
 
-		self.clock = clock;
+        self.clock = clock
 
-		self.whitePiece = whitePiece;
+        self.whitePiece = whitePiece
 
-		self.blackPiece = blackPiece;
+        self.blackPiece = blackPiece
 
-		self.boardImg = boardImg;
+        self.boardImg = boardImg
 
-	#Handels the placement of the pieces on to the board. Either in phase 1 or phase 2.
-	def placePiece(self, turn, placement, phase=1, oldLocation=-1): 
-		i = 0;
-		valid = False;
-		mouseX, mouseY = placement;
+    # Handels the placement of the pieces on to the board. Either in phase 1 or phase 2.
+    def placePiece(self, turn, placement, phase=1, oldLocation=-1): 
+        i = 0
+        valid = False
+        mouseX, mouseY = placement
 
-		#For position pos if the cursor is at a valid position, 
-		# the position is not occupied or its the first piece being placed, 
-		# place or create a piece (depending on phase).
-		for pos in self.gameBoard.XYPoints:
-			if ((mouseX <= pos[0]+self.hitBoxRadius and mouseX >= pos[0]-self.hitBoxRadius) and 
-				(mouseY <= pos[1]+self.hitBoxRadius and mouseY >= pos[1]-self.hitBoxRadius)):
+        # For position pos if the cursor is at a valid position, 
+        #  the position is not occupied or its the first piece being placed, 
+        #  place or create a piece (depending on phase).
+        for pos in self.gameBoard.XYPoints:
+            if ((mouseX <= pos[0]+self.hitBoxRadius and mouseX >= pos[0]-self.hitBoxRadius) and
+                (mouseY <= pos[1]+self.hitBoxRadius and mouseY >= pos[1]-self.hitBoxRadius)):
 
-				if phase == 1:
-					#phase 1 placement check
-					if len(self.gameBoard.Pieces) > 0:
-						for piece in self.gameBoard.Pieces:
-							if piece.location == i:
-								valid = False;
-								#Break if there is a piece already
-								# at the given location.
-								break;
-							else:
-								location = i;
-								validPos = pos;
-								valid = True;
-					else: 
-						location = i;
-						validPos = pos;
-						valid = True;
-				else:
-					#phase 2 placement check
-					newLocation = i;
-					if self.validMovement(oldLocation, newLocation):
-						self.gameBoard.Pieces[oldLocation].location = newLocation;
-						valid = True;
+                if phase == 1:
+                    #phase 1 placement check
+                    if len(self.gameBoard.Pieces) > 0:
+                        for piece in self.gameBoard.Pieces:
+                            if piece.location == i:
+                                valid = False
+                                # Break if there is a piece already
+                                #  at the given location.
+                                break
+                            else:
+                                location = i
+                                validPos = pos
+                                valid = True
+                    else: 
+                        location = i
+                        validPos = pos
+                        valid = True
+                else:
+                    # phase 2 placement check
+                    newLocation = i
+                    if self.validMovement(oldLocation, newLocation):
+                        self.gameBoard.Pieces[oldLocation].location = newLocation
+                        valid = True
 
-			#index of positon/piece location. Look at Board for reference.				
-			i = i + 1;
+            # index of positon/piece location. Look at Board for reference.              
+            i = i + 1
 
-		if valid and phase == 1:
-			newPiece = Piece(turn, location);
-			self.gameBoard.Pieces.append(newPiece);
-			
-		self.drawCurrentBoard();
+        if valid and phase == 1:
+            newPiece = Piece(turn, location)
+            self.gameBoard.Pieces.append(newPiece)
+            
+        self.drawCurrentBoard()
 
-		return valid;
+        return valid
 
-	#Attaches piece to cursor in phase 2.
-	def movePiece(self, turn, mousePosition):
-		i = 0;
-		j = 0;
-		valid = False;
-		mouseX, mouseY = mousePosition;
+    # Attaches piece to cursor in phase 2.
+    def movePiece(self, turn, mousePosition):
+        i = 0
+        j = 0
+        valid = False
+        mouseX, mouseY = mousePosition
 
-		#Get the piece at position pos if the cursor is at a valid position
-		for pos in self.gameBoard.XYPoints:
-			if ((mouseX <= pos[0]+self.hitBoxRadius and mouseX >= pos[0]-self.hitBoxRadius) and 
-				(mouseY <= pos[1]+self.hitBoxRadius and mouseY >= pos[1]-self.hitBoxRadius)):
-				for piece in self.gameBoard.Pieces:
-					if piece.location == i:
+        # Get the piece at position pos if the cursor is at a valid position
+        for pos in self.gameBoard.XYPoints:
+            if ((mouseX <= pos[0]+self.hitBoxRadius and mouseX >= pos[0]-self.hitBoxRadius) and
+                (mouseY <= pos[1]+self.hitBoxRadius and mouseY >= pos[1]-self.hitBoxRadius)):
+                for piece in self.gameBoard.Pieces:
+                    if piece.location == i:
 
-						#Attach piece to mouse cursor
-						placed = False;
-						while not placed:
-							for event in pygame.event.get():
-								currentMouseX, currentMouseY = pygame.mouse.get_pos();
+                        # Attach piece to mouse cursor
+                        placed = False
+                        while not placed:
+                            for event in pygame.event.get():
+                                currentMouseX, currentMouseY = pygame.mouse.get_pos()
 
-								#Drawing of piece attached to mouse cursor
-								self.drawCurrentBoard(piece.location);
-								if(piece.color == "white"):
-									self.display.blit(self.whitePiece, 
-										(currentMouseX-self.pieceMiddle, 
-											currentMouseY-self.pieceMiddle));
-								else:
-									self.display.blit(self.blackPiece, 
-										(currentMouseX-self.pieceMiddle, 
-											currentMouseY-self.pieceMiddle));
-								self.clock.tick(60);
-								pygame.display.flip();
+                                # Drawing of piece attached to mouse cursor
+                                self.drawCurrentBoard(piece.location)
+                                if(piece.color == "white"):
+                                    self.display.blit(self.whitePiece,
+                                                     (currentMouseX-self.pieceMiddle,
+                                                      currentMouseY-self.pieceMiddle))
+                                else:
+                                    self.display.blit(self.blackPiece,
+                                                     (currentMouseX-self.pieceMiddle,
+                                                      currentMouseY-self.pieceMiddle))
+                                self.clock.tick(60)
+                                pygame.display.flip()
 
-								#Placement of piece after a completed movement
-								if event.type == pygame.MOUSEBUTTONDOWN:
-									if event.button == 1:
-										if(self.placePiece(piece.color, (event.pos), 2, i)):
-											valid = True;
-											placed = True;
+                                # Placement of piece after a completed movement
+                                if event.type == pygame.MOUSEBUTTONDOWN:
+                                    if event.button == 1:
+                                        if(self.placePiece(piece.color, (event.pos), 2, i)):
+                                            valid = True
+                                            placed = True
 
-			i = i + 1;
+            i = i + 1
 
-		return valid;
+        return valid
 
-	def validMovement(self, oldLocation, newLocation):
-		return True;	
+    def validMovement(self, oldLocation, newLocation):
+        return True
 
-	#draws the pieces on the board in their current position
-	def drawCurrentBoard(self, pieceToExclude=-1):
-		i = 0;
+    # draws the pieces on the board in their current position
+    def drawCurrentBoard(self, pieceToExclude=-1):
+        i = 0
 
-		#For position pos check if their is a piece on its location and then draw it
-		self.display.blit(self.boardImg, (0,0));
-		for pos in self.gameBoard.XYPoints:
-			for piece in self.gameBoard.Pieces:
-				if piece.location == i:
+        # For position pos check if their is a piece on its location and then draw it
+        self.display.blit(self.boardImg, (0,0))
+        for pos in self.gameBoard.XYPoints:
+            for piece in self.gameBoard.Pieces:
+                if piece.location == i:
 
-					#During movement do not draw the piece that is being moved.
-					if pieceToExclude != -1:
-						if piece.location != pieceToExclude:
-							if piece.color == "white":
-								self.display.blit(self.whitePiece, 
-									(pos[0]-self.pieceMiddle, 
-										pos[1]-self.pieceMiddle));
-							else:
-								self.display.blit(self.blackPiece, 
-									(pos[0]-self.pieceMiddle, 
-										pos[1]-self.pieceMiddle));
-					else:
-						if piece.color == "white":
-							self.display.blit(self.whitePiece, 
-								(pos[0]-self.pieceMiddle, 
-									pos[1]-self.pieceMiddle));
-						else:
-							self.display.blit(self.blackPiece, 
-								(pos[0]-self.pieceMiddle, 
-									pos[1]-self.pieceMiddle));
-			i = i + 1;
+                    # During movement do not draw the piece that is being moved.
+                    if pieceToExclude != -1:
+                        if piece.location != pieceToExclude:
+                            if piece.color == "white":
+                                self.display.blit(self.whitePiece,
+                                                 (pos[0]-self.pieceMiddle,
+                                                  pos[1]-self.pieceMiddle))
+                            else:
+                                self.display.blit(self.blackPiece,
+                                                 (pos[0]-self.pieceMiddle,
+                                                  pos[1]-self.pieceMiddle))
+                    else:
+                        if piece.color == "white":
+                            self.display.blit(self.whitePiece,
+                                             (pos[0]-self.pieceMiddle,
+                                              pos[1]-self.pieceMiddle))
+                        else:
+                            self.display.blit(self.blackPiece,
+                                             (pos[0]-self.pieceMiddle,
+                                              pos[1]-self.pieceMiddle))
+            i = i + 1
