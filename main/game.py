@@ -71,7 +71,9 @@ class Game:
                         valid = True;
                     else:
                         if self.validMovement(newLocation, phase, oldLocation):
-                            self.gameBoard.Pieces[oldLocation].location = newLocation
+                            for piece in self.gameBoard.Pieces:
+                                if piece.location == oldLocation:
+                                    piece.location = newLocation;
                             valid = True
 
             # index of positon/piece location (Look at Board for reference.)              
@@ -97,7 +99,7 @@ class Game:
             if ((mouseX <= pos[0]+self.hitBoxRadius and mouseX >= pos[0]-self.hitBoxRadius) and
                 (mouseY <= pos[1]+self.hitBoxRadius and mouseY >= pos[1]-self.hitBoxRadius)):
                 for piece in self.gameBoard.Pieces:
-                    if piece.location == i:
+                    if piece.location == i and piece.color == turn:
 
                         # Attach piece to mouse cursor
                         placed = False
@@ -115,8 +117,8 @@ class Game:
                                     self.display.blit(self.blackPiece,
                                                      (currentMouseX-self.pieceMiddle,
                                                       currentMouseY-self.pieceMiddle))
-                                self.clock.tick(60)
-                                pygame.display.flip()
+                                pygame.display.flip();
+                                print(event);
 
                                 # Placement of piece after a completed movement
                                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -145,8 +147,9 @@ class Game:
             else:
                 valid = True;
 
-        # phase 2 can only move to adjacent points        
+        # Phase 2 can only move to adjacent points        
         elif phase == 2:
+            # Getting current and new location values on grid
             for i in range(len(self.gameBoard.NumPoints)):
                 for j in range(len(self.gameBoard.NumPoints)):
                     if self.gameBoard.NumPoints[i][j] == oldLocation:
@@ -154,19 +157,34 @@ class Game:
                     if self.gameBoard.NumPoints[i][j] == newLocation:
                         newPoint = [i, j];
 
+            print(oldLocation)
+            print(newLocation)
+            print("oldPoint: " + str(oldPoint[0]) + " " + str(oldPoint[1]))
+            print("newPoint: " + str(newPoint[0]) + " " + str(newPoint[1]))
+            # Comparring current and new location values
             colDifference = oldPoint[0] - newPoint[0];
             rowDifference = oldPoint[1] - newPoint[1];
+            print("colDifferecne: " + str(colDifference))
+            print("rowDiff: " + str(rowDifference))
 
             if colDifference != 0 and rowDifference != 0:
+                print(1)
                 valid = False;
             elif colDifference != 0:
+                print(2)
+                valid = False;
+            elif rowDifference != 0:
                 if ((oldLocation - newLocation == 1) or 
                    (oldLocation - newLocation == -1)):
+                    print(3)
                     valid = True;
-            elif rowDifference != 0:
-                valid = False;
             else:
                 valid = False;
+
+            # Occupied check
+            for piece in self.gameBoard.Pieces:
+                if piece.location == newLocation:
+                    valid = False;
 
         return valid
 
@@ -201,3 +219,5 @@ class Game:
                                              (pos[0]-self.pieceMiddle,
                                               pos[1]-self.pieceMiddle))
             i = i + 1
+
+        print("Drawn");
