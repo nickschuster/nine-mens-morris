@@ -45,7 +45,7 @@ class Game:
         self.boardImg = boardImg
 
     # Handels the placement of the pieces on to the board. Either in phase 1 or phase 2.
-    def placePiece(self, turn, placement, phase=1, oldLocation=-1): 
+    def placePiece(self, turn, placement, phase, oldLocation=-1): 
         i = 0
         valid = False
         mouseX, mouseY = placement
@@ -59,29 +59,22 @@ class Game:
 
                 if phase == 1:
                     #phase 1 placement check
-                    if len(self.gameBoard.Pieces) > 0:
-                        for piece in self.gameBoard.Pieces:
-                            if piece.location == i:
-                                valid = False
-                                # Break if there is a piece already
-                                #  at the given location.
-                                break
-                            else:
-                                location = i
-                                validPos = pos
-                                valid = True
-                    else: 
-                        location = i
+                    newLocation = i;
+                    if self.validMovement(newLocation, phase):
+                        location = newLocation
                         validPos = pos
                         valid = True
                 else:
-                    # phase 2 placement check
-                    newLocation = i
-                    if self.validMovement(oldLocation, newLocation):
-                        self.gameBoard.Pieces[oldLocation].location = newLocation
-                        valid = True
+                    # phase 2 and 3 placement check
+                    newLocation = i;
+                    if newLocation == oldLocation:
+                        valid = True;
+                    else:
+                        if self.validMovement(newLocation, phase, oldLocation):
+                            self.gameBoard.Pieces[oldLocation].location = newLocation
+                            valid = True
 
-            # index of positon/piece location. Look at Board for reference.              
+            # index of positon/piece location (Look at Board for reference.)              
             i = i + 1
 
         if valid and phase == 1:
@@ -128,7 +121,8 @@ class Game:
                                 # Placement of piece after a completed movement
                                 if event.type == pygame.MOUSEBUTTONDOWN:
                                     if event.button == 1:
-                                        if(self.placePiece(piece.color, (event.pos), 2, i)):
+                                        oldLocation = i
+                                        if(self.placePiece(piece.color, (event.pos), self.phase, oldLocation)):
                                             valid = True
                                             placed = True
 
@@ -136,8 +130,45 @@ class Game:
 
         return valid
 
-    def validMovement(self, oldLocation, newLocation):
-        return True
+    # Checks if the move is valid based on phase
+    def validMovement(self, newLocation, phase, oldLocation=-1):
+        valid = False
+        # phase 1 and 3 can move anywhere except an occupied spot
+        if phase == 1 or phase == 3:
+            if len(self.gameBoard.Pieces) > 0:
+                for piece in self.gameBoard.Pieces:
+                    if piece.location == newLocation:
+                        valid = False;
+                        break
+                    else:
+                        valid = True
+            else:
+                valid = True;
+
+        # phase 2 can only move to adjacent points        
+        elif phase == 2:
+            for i in range(len(self.gameBoard.NumPoints)):
+                for j in range(len(self.gameBoard.NumPoints)):
+                    if self.gameBoard.NumPoints[i][j] == oldLocation:
+                        oldPoint = [i, j];
+                    if self.gameBoard.NumPoints[i][j] == newLocation:
+                        newPoint = [i, j];
+
+            colDifference = oldPoint[0] - newPoint[0];
+            rowDifference = oldPoint[1] - newPoint[1];
+
+            if colDifference != 0 and rowDifference != 0:
+                valid = False;
+            elif colDifference != 0:
+                if ((oldLocation - newLocation == 1) or 
+                   (oldLocation - newLocation == -1)):
+                    valid = True;
+            elif rowDifference != 0:
+                valid = False;
+            else:
+                valid = False;
+
+        return valid
 
     # draws the pieces on the board in their current position
     def drawCurrentBoard(self, pieceToExclude=-1):
