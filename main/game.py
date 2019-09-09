@@ -171,8 +171,17 @@ class Game:
                 print(1)
                 valid = False;
             elif colDifference != 0:
+                if oldPoint[1] == 0 or oldPoint[1] == 6:
+                    if colDifference == 3 or colDifference == -3:
+                        valid = True;
+                if oldPoint[1] == 1 or oldPoint[1] == 5:
+                    if colDifference == 2 or colDifference == -2:
+                        valid = True;
+                        print("here")
+                if oldPoint[1] == 2 or oldPoint[1] == 3 or oldPoint[1] == 4:
+                    if colDifference == 1 or colDifference == -1:
+                        valid = True;
                 print(2)
-                valid = False;
             elif rowDifference != 0:
                 if ((oldLocation - newLocation == 1) or 
                    (oldLocation - newLocation == -1)):
@@ -219,5 +228,3 @@ class Game:
                                              (pos[0]-self.pieceMiddle,
                                               pos[1]-self.pieceMiddle))
             i = i + 1
-
-        print("Drawn");
