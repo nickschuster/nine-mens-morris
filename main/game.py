@@ -58,14 +58,14 @@ class Game:
                 (mouseY <= pos[1]+self.hitBoxRadius and mouseY >= pos[1]-self.hitBoxRadius)):
 
                 if phase == 1:
-                    #phase 1 placement check
+                    # Phase 1 placement check
                     newLocation = i;
                     if self.validMovement(newLocation, phase):
                         location = newLocation
                         validPos = pos
                         valid = True
                 else:
-                    # phase 2 and 3 placement check
+                    # Phase 2 and 3 placement check
                     newLocation = i;
                     if newLocation == oldLocation:
                         valid = True;
@@ -76,7 +76,7 @@ class Game:
                                     piece.location = newLocation;
                             valid = True
 
-            # index of positon/piece location (Look at Board for reference.)              
+            # Index of positon/piece location (Look at Board for reference.)              
             i = i + 1
 
         if valid and phase == 1:
@@ -157,18 +157,11 @@ class Game:
                     if self.gameBoard.NumPoints[i][j] == newLocation:
                         newPoint = [i, j];
 
-            print(oldLocation)
-            print(newLocation)
-            print("oldPoint: " + str(oldPoint[0]) + " " + str(oldPoint[1]))
-            print("newPoint: " + str(newPoint[0]) + " " + str(newPoint[1]))
             # Comparring current and new location values
             colDifference = oldPoint[0] - newPoint[0];
             rowDifference = oldPoint[1] - newPoint[1];
-            print("colDifferecne: " + str(colDifference))
-            print("rowDiff: " + str(rowDifference))
 
             if colDifference != 0 and rowDifference != 0:
-                print(1)
                 valid = False;
             elif colDifference != 0:
                 if oldPoint[1] == 0 or oldPoint[1] == 6:
@@ -181,12 +174,13 @@ class Game:
                 if oldPoint[1] == 2 or oldPoint[1] == 3 or oldPoint[1] == 4:
                     if colDifference == 1 or colDifference == -1:
                         valid = True;
-                print(2)
             elif rowDifference != 0:
                 if ((oldLocation - newLocation == 1) or 
                    (oldLocation - newLocation == -1)):
-                    print(3)
-                    valid = True;
+                    if not ((oldLocation == 11 or newLocation == 11) and 
+                            (oldLocation == 12 or newLocation == 12)):
+                        valid = True
+
             else:
                 valid = False;
 
@@ -197,7 +191,12 @@ class Game:
 
         return valid
 
-    # draws the pieces on the board in their current position
+    # Returns either the amount of mills for a given player or 
+    #  an array with pieces that are currently in mills for a given player
+    def checkForMill(self, turn, pieceCheck=False):
+        return False
+
+    # Draws the pieces on the board in their current position
     def drawCurrentBoard(self, pieceToExclude=-1):
         i = 0
 
