@@ -68,7 +68,14 @@ class Game:
                     # Phase 2 and 3 placement check
                     newLocation = i;
                     if newLocation == oldLocation:
-                        valid = True;
+                        # Briefly swap turns so that on method exit they swapped back
+                        # as picking up a piece and putting it back down should not
+                        # count as a move
+                        if(turn == "white"):
+                            self.turn = "black";
+                        else:
+                            self.turn = "white"
+                        valid = True
                     else:
                         if self.validMovement(newLocation, phase, oldLocation):
                             for piece in self.gameBoard.Pieces:
@@ -193,8 +200,23 @@ class Game:
 
     # Returns either the amount of mills for a given player or 
     #  an array with pieces that are currently in mills for a given player
-    def checkForMill(self, turn, pieceCheck=False):
-        return False
+    def checkForMills(self, turn, pieceCheck=False):
+        for i in range(len(self.gameBoard.NumPoints)):
+            for j in range(len(self.gameBoard.NumPoints)):
+                print(str(i) + ", " + str(j) + " : " + str(self.gameBoard.NumPoints[i][j]))
+
+        print(self.gameBoard.NumPoints[3][1]);
+        return 0
+
+    # Returns true if a valid piece has been removed from the board
+    #  called if there are mills 
+    def takePiece(self, turn):
+        return True
+
+    # Checks win condition. If one player has less than 3 pieces on the board.
+    #  Sets class variable accordingly.
+    def checkForWin(self):
+        self.win = False;
 
     # Draws the pieces on the board in their current position
     def drawCurrentBoard(self, pieceToExclude=-1):
