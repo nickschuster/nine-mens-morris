@@ -35,7 +35,7 @@ while not game.win:
 
                 if game.phase == 1:
                     if(game.placePiece(game.turn, event.pos, game.phase)):
-                        if(game.takePiece(game.checkForMills(game.turn))):
+                        if(game.takePiece(game.turn, game.checkForMills(game.turn))):
                             if(game.takePiece(game.turn)):
                                 if(game.turn == "white"):
                                     game.turn = "black"

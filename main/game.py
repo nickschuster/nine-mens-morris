@@ -168,6 +168,7 @@ class Game:
             colDifference = oldPoint[0] - newPoint[0];
             rowDifference = oldPoint[1] - newPoint[1];
 
+            # Valid movement configurations
             if colDifference != 0 and rowDifference != 0:
                 valid = False;
             elif colDifference != 0:
@@ -188,9 +189,6 @@ class Game:
                             (oldLocation == 12 or newLocation == 12)):
                         valid = True
 
-            else:
-                valid = False;
-
             # Occupied check
             for piece in self.gameBoard.Pieces:
                 if piece.location == newLocation:
@@ -201,16 +199,35 @@ class Game:
     # Returns either the amount of mills for a given player or 
     #  an array with pieces that are currently in mills for a given player
     def checkForMills(self, turn, pieceCheck=False):
+        millCount = 0;
+        piecesInMill = []
         for i in range(len(self.gameBoard.NumPoints)):
+            threeRow = []
             for j in range(len(self.gameBoard.NumPoints)):
-                print(str(i) + ", " + str(j) + " : " + str(self.gameBoard.NumPoints[i][j]))
+                threeRow.append(self.gameBoard.NumPoints[i][j])
 
-        print(self.gameBoard.NumPoints[3][1]);
-        return 0
+            rowCount = 0;
+            rowPieces = []    
+            for k in threeRow:
+                if k != -1:
+                    for piece in self.gameBoard.Pieces:
+                        if piece.color == turn:
+                            rowPieces.append(piece)
+                            rowCount = rowCount + 1
+
+            if rowCount == 3:
+                millCount += 1;
+                piecesInMill.append(rowPieces)
+
+        if pieceCheck:
+            return piecesInMill
+        else:
+            return millCount
 
     # Returns true if a valid piece has been removed from the board
     #  called if there are mills 
-    def takePiece(self, turn):
+    def takePiece(self, turn, count):
+        print(count)
         return True
 
     # Checks win condition. If one player has less than 3 pieces on the board.
