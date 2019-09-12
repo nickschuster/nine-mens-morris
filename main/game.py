@@ -125,7 +125,6 @@ class Game:
                                                      (currentMouseX-self.pieceMiddle,
                                                       currentMouseY-self.pieceMiddle))
                                 pygame.display.flip();
-                                print(event);
 
                                 # Placement of piece after a completed movement
                                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -168,7 +167,7 @@ class Game:
             colDifference = oldPoint[0] - newPoint[0];
             rowDifference = oldPoint[1] - newPoint[1];
 
-            # Valid movement configurations
+            # Valid movement configurations (Board for reference)
             if colDifference != 0 and rowDifference != 0:
                 valid = False;
             elif colDifference != 0:
@@ -178,7 +177,6 @@ class Game:
                 if oldPoint[1] == 1 or oldPoint[1] == 5:
                     if colDifference == 2 or colDifference == -2:
                         valid = True;
-                        print("here")
                 if oldPoint[1] == 2 or oldPoint[1] == 3 or oldPoint[1] == 4:
                     if colDifference == 1 or colDifference == -1:
                         valid = True;
@@ -202,22 +200,24 @@ class Game:
         millCount = 0;
         piecesInMill = []
         for i in range(len(self.gameBoard.NumPoints)):
-            threeRow = []
+            columnMill = []
+            rowMill = []
             for j in range(len(self.gameBoard.NumPoints)):
-                threeRow.append(self.gameBoard.NumPoints[i][j])
-
-            rowCount = 0;
-            rowPieces = []    
-            for k in threeRow:
+                columnMill.append(self.gameBoard.NumPoints[i][j])
+                rowMill.append(self.gameBoard.NumPoints[j][i])
+            
+            columnCount = 0;
+            for k in columnMill:
                 if k != -1:
                     for piece in self.gameBoard.Pieces:
-                        if piece.color == turn:
-                            rowPieces.append(piece)
-                            rowCount = rowCount + 1
+                        if piece.color == turn and piece.location == k:
+                            columnCount += 1 ;
 
-            if rowCount == 3:
+
+            if columnCount == 3:
                 millCount += 1;
-                piecesInMill.append(rowPieces)
+                piecesInMill.append(columnMill)
+                print(piecesInMill)
 
         if pieceCheck:
             return piecesInMill
