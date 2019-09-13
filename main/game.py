@@ -30,6 +30,10 @@ class Game:
         #  Images are drawn from top corner. Minus this to draw at middle.
         self.pieceMiddle = 25
 
+        # Keeps track of current mills so that they can not be 
+        #  reused indefinitely.
+        self.piecesInMill = []
+
         self.turn = "white"
 
         self.gameBoard = Board()
@@ -194,11 +198,10 @@ class Game:
 
         return valid
 
-    # Returns either the amount of mills for a given player or 
-    #  an array with pieces that are currently in mills for a given player
-    def checkForMills(self, turn, pieceCheck=False):
+    # Returns the amount of mills for a given player
+    def checkForMills(self, turn):
+        currentPiecesInMills = []
         millCount = 0;
-        piecesInMill = []
         for i in range(len(self.gameBoard.NumPoints)):
             columnMill = []
             rowMill = []
@@ -206,6 +209,7 @@ class Game:
                 columnMill.append(self.gameBoard.NumPoints[i][j])
                 rowMill.append(self.gameBoard.NumPoints[j][i])
             
+            # Mills in columns
             columnCount = 0;
             for k in columnMill:
                 if k != -1:
@@ -213,16 +217,21 @@ class Game:
                         if piece.color == turn and piece.location == k:
                             columnCount += 1 ;
 
+            # Mills in rows
+            rowCount = 0
+            for j in rowMill:
+                if j != -1:
+                    for piece in self.gameBoard.Pieces:
+                        if piece.color == turn and piece.location == j:
+                            rowCount += 1
+
 
             if columnCount == 3:
                 millCount += 1;
-                piecesInMill.append(columnMill)
-                print(piecesInMill)
+                currentPiecesInMills.append(columnMill)
 
-        if pieceCheck:
-            return piecesInMill
-        else:
-            return millCount
+        self.piecesInMill = currentPiecesInMills;
+        return millCount
 
     # Returns true if a valid piece has been removed from the board
     #  called if there are mills 
