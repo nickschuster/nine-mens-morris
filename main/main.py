@@ -35,21 +35,17 @@ while not game.win:
 
                 if game.phase == 1:
                     if(game.placePiece(game.turn, event.pos, game.phase)):
-                        millCount = game.checkForMills(game.turn);
-                        if(game.takePiece(game.turn, millCount)):
-                            if(game.turn == "white"):
-                                game.turn = "black"
-                            else:
-                                game.turn = "white"
+                        if(game.turn == "white"):
+                            game.turn = "black"
+                        else:
+                            game.turn = "white"
 
                 if game.phase == 2:
                     if game.movePiece(game.turn, event.pos):
-                        millCount = game.checkForMills(game.turn);
-                        if(game.takePiece(game.turn, millCount)):
-                            if(game.turn == "white"):
-                                game.turn = "black"
-                            else:
-                                game.turn = "white"
+                        if(game.turn == "white"):
+                            game.turn = "black"
+                        else:
+                            game.turn = "white"
 
         game.checkForWin();    
         pygame.display.flip()

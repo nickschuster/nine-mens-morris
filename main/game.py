@@ -30,8 +30,7 @@ class Game:
         #  Images are drawn from top corner. Minus this to draw at middle.
         self.pieceMiddle = 25
 
-        # Keeps track of current mills so that they can not be 
-        #  reused indefinitely.
+        # Keeps track of current mills as pieces in a mill can not be taken.
         self.piecesInMill = []
 
         self.turn = "white"
@@ -72,9 +71,9 @@ class Game:
                     # Phase 2 and 3 placement check
                     newLocation = i;
                     if newLocation == oldLocation:
-                        # Briefly swap turns so that on method exit they swapped back
-                        # as picking up a piece and putting it back down should not
-                        # count as a move
+                        # Briefly swap turns so that on method exit they are swapped back
+                        #  as picking up a piece and putting it back down should not
+                        #  count as a move
                         if(turn == "white"):
                             self.turn = "black";
                         else:
@@ -94,6 +93,9 @@ class Game:
             newPiece = Piece(turn, location)
             self.gameBoard.Pieces.append(newPiece)
             
+        if valid:
+            self.checkForMill(turn, newLocation)
+
         self.drawCurrentBoard()
 
         return valid
@@ -199,39 +201,49 @@ class Game:
         return valid
 
     # Returns the amount of mills for a given player
-    def checkForMills(self, turn):
-        currentPiecesInMills = []
+    def checkForMill(self, turn, newLocation):
+        piecesInMill = []
         millCount = 0;
+        colCount = 0;
+        rowCount = 0;
         for i in range(len(self.gameBoard.NumPoints)):
-            columnMill = []
-            rowMill = []
             for j in range(len(self.gameBoard.NumPoints)):
-                columnMill.append(self.gameBoard.NumPoints[i][j])
-                rowMill.append(self.gameBoard.NumPoints[j][i])
-            
-            # Mills in columns
-            columnCount = 0;
-            for k in columnMill:
-                if k != -1:
-                    for piece in self.gameBoard.Pieces:
-                        if piece.color == turn and piece.location == k:
-                            columnCount += 1 ;
+                if newLocation == self.gameBoard.NumPoints[i][j]:
+                    print(newLocation)
+                    print(self.gameBoard.NumPoints[i][j])
+                    column = i
+                    row = j
 
-            # Mills in rows
-            rowCount = 0
-            for j in rowMill:
-                if j != -1:
-                    for piece in self.gameBoard.Pieces:
-                        if piece.color == turn and piece.location == j:
-                            rowCount += 1
+        for k in range(1, 7):
+            if column + k < 7:
+                for piece in self.gameBoard.Pieces:
+                    if (piece.location == self.gameBoard.NumPoints[column+k][row]
+                        and piece.color == turn):
+                        colCount += 1
+            if column - k > -1:
+                for piece in self.gameBoard.Pieces:
+                    if (piece.location == self.gameBoard.NumPoints[column-k][row]
+                        and piece.color == turn):
+                        colCount += 1
+            if row + k < 7:
+                for piece in self.gameBoard.Pieces:
+                    if (piece.location == self.gameBoard.NumPoints[column][row+k]
+                        and piece.color == turn):
+                        rowCount += 1
+            if row - k > -1:
+                for piece in self.gameBoard.Pieces:
+                    if (piece.location == self.gameBoard.NumPoints[column][row-k]
+                        and piece.color == turn):
+                        rowCount += 1
 
+        if rowCount > 1:
+            millCount += 1;
 
-            if columnCount == 3:
-                millCount += 1;
-                currentPiecesInMills.append(columnMill)
+        if colCount > 1:
+            millCount += 1;
 
-        self.piecesInMill = currentPiecesInMills;
-        return millCount
+        print("TOTAL" + str(millCount))
+        return millCount;
 
     # Returns true if a valid piece has been removed from the board
     #  called if there are mills 
