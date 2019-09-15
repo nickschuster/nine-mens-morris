@@ -94,7 +94,8 @@ class Game:
             self.gameBoard.Pieces.append(newPiece)
             
         if valid:
-            self.checkForMill(turn, newLocation)
+            millCount = self.checkForMill(turn, newLocation)
+            self.takePiece(turn, millCount)
 
         self.drawCurrentBoard()
 
@@ -248,7 +249,28 @@ class Game:
     # Returns true if a valid piece has been removed from the board
     #  called if there are mills 
     def takePiece(self, turn, count):
-        print(count)
+        millCount = count;
+        while millCount != 0:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        i = 0;
+                        mouseX, mouseY = event.pos;
+                        for pos in self.gameBoard.XYPoints:
+                            if ((mouseX <= pos[0]+self.hitBoxRadius and mouseX >= pos[0]-self.hitBoxRadius) and
+                                (mouseY <= pos[1]+self.hitBoxRadius and mouseY >= pos[1]-self.hitBoxRadius)):
+                                j = 0
+                                for piece in self.gameBoard.Pieces:
+                                    if piece.location == i and piece.color != turn:
+                                        del self.gameBoard.Pieces[j];
+                                        millCount -= 1;
+                                    j += 1
+
+
+                            i += 1
+
+        self.drawCurrentBoard();
+
         return True
 
     # Checks win condition. If one player has less than 3 pieces on the board.
