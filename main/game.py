@@ -210,8 +210,6 @@ class Game:
         for i in range(len(self.gameBoard.NumPoints)):
             for j in range(len(self.gameBoard.NumPoints)):
                 if newLocation == self.gameBoard.NumPoints[i][j]:
-                    print(newLocation)
-                    print(self.gameBoard.NumPoints[i][j])
                     column = i
                     row = j
 
@@ -243,11 +241,10 @@ class Game:
         if colCount > 1:
             millCount += 1;
 
-        print("TOTAL" + str(millCount))
         return millCount;
 
-    # Returns true if a valid piece has been removed from the board
-    #  called if there are mills 
+    # Returns true if a valid piece has been removed from the board.
+    #  Called if there are mills 
     def takePiece(self, turn, count):
         millCount = count;
         while millCount != 0:
@@ -274,9 +271,29 @@ class Game:
         return True
 
     # Checks win condition. If one player has less than 3 pieces on the board.
-    #  Sets class variable accordingly.
+    #  Sets class variable accordingly. Also updates to phase 3.
     def checkForWin(self):
-        self.win = False;
+        winFont = pygame.font.SysFont("Arial", 45);
+        countWhite = 0;
+        countBlack = 0;
+        for piece in self.gameBoard.Pieces:
+            if piece.color == "white":
+                countWhite += 1;
+            else:
+                countBlack += 1;
+
+        if self.phase == 2:
+            if countWhite < 3:
+                self.win = True;
+                winText = winFont.render("White wins.", True, self.black)
+            elif countBlack < 3:
+                self.win = True;
+                winText = winFont.render("Black wins.", True, self.black)
+
+            if self.win:
+                self.display.blit(winText, (250, 250));
+        
+
 
     # Draws the pieces on the board in their current position
     def drawCurrentBoard(self, pieceToExclude=-1):
