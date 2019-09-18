@@ -1,4 +1,12 @@
-#game logic
+# Game logic
+
+# TODO
+# Keep track of pieces that were already in mills in the previous turn
+# Keep track of number of peices per player
+# Player class ^
+# Reogranize code
+# Optomize travresal of board; hash table or tree
+
 import pygame
 from board import Board
 from piece import Piece
@@ -273,9 +281,11 @@ class Game:
     # Checks win condition. If one player has less than 3 pieces on the board.
     #  Sets class variable accordingly. Also updates to phase 3.
     def checkForWin(self):
-        winFont = pygame.font.SysFont("Arial", 45);
+        winFont = pygame.font.SysFont("Arial", 80);
         countWhite = 0;
         countBlack = 0;
+
+        # Counts all pieces. If one color has less than 3, the other color has won.
         for piece in self.gameBoard.Pieces:
             if piece.color == "white":
                 countWhite += 1;
@@ -285,10 +295,10 @@ class Game:
         if self.phase == 2:
             if countWhite < 3:
                 self.win = True;
-                winText = winFont.render("White wins.", True, self.black)
+                winText = winFont.render("Black wins.", True, self.black, self.white)
             elif countBlack < 3:
                 self.win = True;
-                winText = winFont.render("Black wins.", True, self.black)
+                winText = winFont.render("White wins.", True, self.black, self.white)
 
             if self.win:
                 self.display.blit(winText, (250, 250));
