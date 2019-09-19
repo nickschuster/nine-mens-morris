@@ -92,6 +92,8 @@ class Game:
                             for piece in self.gameBoard.Pieces:
                                 if piece.location == oldLocation:
                                     piece.location = newLocation;
+                                    if piece in self.piecesInMill:
+                                        self.piecesInMill.remove(piece)
                             valid = True
 
             # Index of positon/piece location (Look at Board for reference.)              
@@ -227,27 +229,35 @@ class Game:
                     if (piece.location == self.gameBoard.NumPoints[column+k][row]
                         and piece.color == turn):
                         colCount += 1
+                        piecesInMill.append(piece)
             if column - k > -1:
                 for piece in self.gameBoard.Pieces:
                     if (piece.location == self.gameBoard.NumPoints[column-k][row]
                         and piece.color == turn):
                         colCount += 1
+                        piecesInMill.append(piece)
             if row + k < 7:
                 for piece in self.gameBoard.Pieces:
                     if (piece.location == self.gameBoard.NumPoints[column][row+k]
                         and piece.color == turn):
                         rowCount += 1
+                        piecesInMill.append(piece)
             if row - k > -1:
                 for piece in self.gameBoard.Pieces:
                     if (piece.location == self.gameBoard.NumPoints[column][row-k]
                         and piece.color == turn):
                         rowCount += 1
+                        piecesInMill.append(piece)
 
         if rowCount > 1:
             millCount += 1;
 
         if colCount > 1:
             millCount += 1;
+
+        for pieceInMill in piecesInMill:
+            if pieceInMill not in self.piecesInMill:
+                self.piecesInMill.append(pieceInMill)
 
         return millCount;
 
