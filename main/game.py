@@ -311,7 +311,7 @@ class Game:
                 winText = winFont.render("White wins.", True, self.black, self.white)
 
             if self.win:
-                self.display.blit(winText, (250, 250));
+                self.display.blit(winText, (200, 200));
         
 
 
