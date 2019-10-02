@@ -4,6 +4,26 @@ from game import Game
 # Dimensions
 WINDOW_WIDTH = 1050
 WINDOW_HEIGHT = 750
+BUTTON_WIDTH = 280
+BUTTON_HEIGHT = 100
+BUTTON_X = 760
+BUTTON_ONE_Y = 300
+BUTTON_TWO_Y = 410
+BUTTON_THREE_Y = 520
+BUTTON_FOUR_Y = 630
+TITLE_X = 900
+TITLE_Y = 100
+TITLE_BY_Y = 150
+TITLE_NAME_Y = 200
+
+# Indexs for readability
+X = 0
+Y = 1
+
+# Title strings
+TITLE = 'Nine Men\'s Morris'
+BY = 'By'
+NAME = 'Nikolas Schuster'
 
 # For default look
 BOARD_IMG = pygame.image.load("../assets/ninemensboard.png")
@@ -13,6 +33,10 @@ WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (190,45,45)
 LIGHT_RED = (255,0,0)
+
+# Font options
+FONT = 'Monsterrat-Regular'
+FONT_SIZE = 45
 
 # Sets up the window
 def setup():
@@ -31,19 +55,51 @@ def menu(display, clock):
                 pygame.quit()
                 quit()
 
+        # Background
         display.fill(WHITE)
 
-        font = pygame.font.Font('freesansbold.ttf', 32) 
-        text = font.render('GeeksForGeeks', True, BLACK, BLACK) 
-        textRect = text.get_rect()  
-        textRect.center = (500, 500) 
+        # Empty board
+        display.blit(BOARD_IMG, (0,0))
 
+        # Title
+        font = pygame.font.SysFont(FONT, FONT_SIZE) 
+        title = font.render(TITLE, True, BLACK, WHITE) 
+        titleRect = title.get_rect()  
+        titleRect.center = (TITLE_X, TITLE_Y)
+        by = font.render(BY, True, BLACK, WHITE)
+        byRect = by.get_rect()
+        byRect.center = (TITLE_X, TITLE_BY_Y)
+        name = font.render(NAME, True, BLACK, WHITE)
+        nameRect = name.get_rect()
+        nameRect.center = (TITLE_X, TITLE_NAME_Y)
+        display.blit(title, titleRect)
+        display.blit(by, byRect)
+        display.blit(name, nameRect)
+
+        # Menu buttons
+        buttonLocal = pygame.Rect(BUTTON_X,BUTTON_ONE_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
+        buttonSingle = pygame.Rect(BUTTON_X,BUTTON_TWO_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
+        buttonMulti = pygame.Rect(BUTTON_X,BUTTON_THREE_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
+        buttonQuit = pygame.Rect(BUTTON_X,BUTTON_FOUR_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
+        pygame.draw.rect(display, RED, buttonLocal)
+        pygame.draw.rect(display, RED, buttonSingle)
+        pygame.draw.rect(display, RED, buttonMulti)
+        pygame.draw.rect(display, RED, buttonQuit)
+
+        # Button interactivity
         mouse = pygame.mouse.get_pos()
-        print(mouse)
+        if BUTTON_X < mouse[X] < BUTTON_X+BUTTON_WIDTH:
+            if BUTTON_ONE_Y < mouse[Y] < BUTTON_ONE_Y+BUTTON_HEIGHT:
+                pygame.draw.rect(display, LIGHT_RED, buttonLocal)
+            if BUTTON_TWO_Y < mouse[Y] < BUTTON_TWO_Y+BUTTON_HEIGHT:
+                pygame.draw.rect(display, LIGHT_RED, buttonSingle)
+            if BUTTON_THREE_Y < mouse[Y] < BUTTON_THREE_Y+BUTTON_HEIGHT:
+                pygame.draw.rect(display, LIGHT_RED, buttonMulti)
+            if BUTTON_FOUR_Y < mouse[Y] < BUTTON_FOUR_Y+BUTTON_HEIGHT:
+                pygame.draw.rect(display, LIGHT_RED, buttonQuit)
 
-        #pygame.draw.rect()
 
-        
+        # Update
         pygame.display.update()
         clock.tick(30)
 
