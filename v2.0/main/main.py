@@ -46,60 +46,76 @@ def setup():
     clock = pygame.time.Clock()
     return display, clock
 
-# Handles menu events
+#Draws the title to display. Returns nothing.
+def drawTitle(display):
+    # Title
+    font = pygame.font.SysFont(FONT, FONT_SIZE) 
+    
+    title = font.render(TITLE, True, BLACK, WHITE) 
+    titleRect = title.get_rect()  
+    titleRect.center = (TITLE_X, TITLE_Y)
+
+    by = font.render(BY, True, BLACK, WHITE)
+    byRect = by.get_rect()
+    byRect.center = (TITLE_X, TITLE_BY_Y)
+
+    name = font.render(NAME, True, BLACK, WHITE)
+    nameRect = name.get_rect()
+    nameRect.center = (TITLE_X, TITLE_NAME_Y)
+
+    display.blit(title, titleRect)
+    display.blit(by, byRect)
+    display.blit(name, nameRect)
+
+# Draws the menu buttons to display. Returns nothing
+def drawButtons(display):
+    # Drawing buttons
+    buttonLocal = pygame.Rect(BUTTON_X,BUTTON_ONE_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
+    buttonSingle = pygame.Rect(BUTTON_X,BUTTON_TWO_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
+    buttonMulti = pygame.Rect(BUTTON_X,BUTTON_THREE_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
+    buttonQuit = pygame.Rect(BUTTON_X,BUTTON_FOUR_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
+    pygame.draw.rect(display, RED, buttonLocal)
+    pygame.draw.rect(display, RED, buttonSingle)
+    pygame.draw.rect(display, RED, buttonMulti)
+    pygame.draw.rect(display, RED, buttonQuit)
+
+    # Button interactivity
+    mouse = pygame.mouse.get_pos()
+    if BUTTON_X < mouse[X] < BUTTON_X+BUTTON_WIDTH:
+        if BUTTON_ONE_Y < mouse[Y] < BUTTON_ONE_Y+BUTTON_HEIGHT:
+            pygame.draw.rect(display, LIGHT_RED, buttonLocal)
+        if BUTTON_TWO_Y < mouse[Y] < BUTTON_TWO_Y+BUTTON_HEIGHT:
+            pygame.draw.rect(display, LIGHT_RED, buttonSingle)
+        if BUTTON_THREE_Y < mouse[Y] < BUTTON_THREE_Y+BUTTON_HEIGHT:
+            pygame.draw.rect(display, LIGHT_RED, buttonMulti)
+        if BUTTON_FOUR_Y < mouse[Y] < BUTTON_FOUR_Y+BUTTON_HEIGHT:
+            pygame.draw.rect(display, LIGHT_RED, buttonQuit)
+
+def drawTitle(display)
+
+# Handles menu events. Draws menu items. Makes them interactive.
+# Does framerate for program start. Returns nothing.
 def menu(display, clock):
     intro = True
     while intro:
+        # Test for user action
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.MOUSE_DOWN:
+                mousePos = event.pos
+                buttonPressed = buttonPressed(mousePos)
 
-        # Background
+        # Emtpty the board and load a default bakcgorund color.
         display.fill(WHITE)
-
-        # Empty board
         display.blit(BOARD_IMG, (0,0))
 
-        # Title
-        font = pygame.font.SysFont(FONT, FONT_SIZE) 
-        title = font.render(TITLE, True, BLACK, WHITE) 
-        titleRect = title.get_rect()  
-        titleRect.center = (TITLE_X, TITLE_Y)
-        by = font.render(BY, True, BLACK, WHITE)
-        byRect = by.get_rect()
-        byRect.center = (TITLE_X, TITLE_BY_Y)
-        name = font.render(NAME, True, BLACK, WHITE)
-        nameRect = name.get_rect()
-        nameRect.center = (TITLE_X, TITLE_NAME_Y)
-        display.blit(title, titleRect)
-        display.blit(by, byRect)
-        display.blit(name, nameRect)
+        # Draw menu elements
+        drawButtons(display)
+        drawTitle(display)
 
-        # Menu buttons
-        buttonLocal = pygame.Rect(BUTTON_X,BUTTON_ONE_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
-        buttonSingle = pygame.Rect(BUTTON_X,BUTTON_TWO_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
-        buttonMulti = pygame.Rect(BUTTON_X,BUTTON_THREE_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
-        buttonQuit = pygame.Rect(BUTTON_X,BUTTON_FOUR_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
-        pygame.draw.rect(display, RED, buttonLocal)
-        pygame.draw.rect(display, RED, buttonSingle)
-        pygame.draw.rect(display, RED, buttonMulti)
-        pygame.draw.rect(display, RED, buttonQuit)
-
-        # Button interactivity
-        mouse = pygame.mouse.get_pos()
-        if BUTTON_X < mouse[X] < BUTTON_X+BUTTON_WIDTH:
-            if BUTTON_ONE_Y < mouse[Y] < BUTTON_ONE_Y+BUTTON_HEIGHT:
-                pygame.draw.rect(display, LIGHT_RED, buttonLocal)
-            if BUTTON_TWO_Y < mouse[Y] < BUTTON_TWO_Y+BUTTON_HEIGHT:
-                pygame.draw.rect(display, LIGHT_RED, buttonSingle)
-            if BUTTON_THREE_Y < mouse[Y] < BUTTON_THREE_Y+BUTTON_HEIGHT:
-                pygame.draw.rect(display, LIGHT_RED, buttonMulti)
-            if BUTTON_FOUR_Y < mouse[Y] < BUTTON_FOUR_Y+BUTTON_HEIGHT:
-                pygame.draw.rect(display, LIGHT_RED, buttonQuit)
-
-
-        # Update
+        # Update display and tick framerate
         pygame.display.update()
         clock.tick(30)
 
