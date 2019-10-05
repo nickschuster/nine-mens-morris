@@ -1,4 +1,4 @@
-import pygame
+import pygame; pygame.init()
 from game import Game
 
 # Dimensions
@@ -26,6 +26,12 @@ BUTTON_SINGLE = 2
 BUTTON_MULTI = 3
 BUTTON_QUIT = 4
 
+# Button lables
+LOCAL_LABEL = "Local multiplayer"
+MULTI_LABEL = "Online multiplayer"
+SINGLE_LABEL = "Single player"
+QUIT_LABEL = "Quit"
+
 # Title strings
 TITLE = 'Nine Men\'s Morris'
 BY = 'By'
@@ -42,30 +48,30 @@ LIGHT_RED = (255,0,0)
 
 # Font options
 FONT = 'Monsterrat-Regular'
-FONT_SIZE = 45
+LARGE_TEXT = pygame.font.SysFont(FONT, 45) 
+MEDIUM_TEXT = pygame.font.SysFont(FONT, 35) 
+SMALL_TEXT = pygame.font.SysFont(FONT, 25) 
 
 # Sets up the window
 def setup():
-    pygame.init()
     pygame.display.set_caption('Nine Men\'s Morris')
     display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     clock = pygame.time.Clock()
     return display, clock
 
-#Draws the title to display. Returns nothing.
+# Draws the title to display. 
+#
+# Returns nothing.
 def drawTitle(display):
-    # Title
-    font = pygame.font.SysFont(FONT, FONT_SIZE) 
-    
-    title = font.render(TITLE, True, BLACK, WHITE) 
+    title = LARGE_TEXT.render(TITLE, True, BLACK, WHITE) 
     titleRect = title.get_rect()  
     titleRect.center = (TITLE_X, TITLE_Y)
 
-    by = font.render(BY, True, BLACK, WHITE)
+    by = LARGE_TEXT.render(BY, True, BLACK, WHITE)
     byRect = by.get_rect()
     byRect.center = (TITLE_X, TITLE_BY_Y)
 
-    name = font.render(NAME, True, BLACK, WHITE)
+    name = LARGE_TEXT.render(NAME, True, BLACK, WHITE)
     nameRect = name.get_rect()
     nameRect.center = (TITLE_X, TITLE_NAME_Y)
 
@@ -73,15 +79,12 @@ def drawTitle(display):
     display.blit(by, byRect)
     display.blit(name, nameRect)
 
-# Draws the menu buttons to display. Records what button the mouse
-# is on. 
+# Draws the buttons to the display. Lights up the button
+# the mouse is hovering over.
 #
-# If clicked is true, returns the recorded button
-def buttonHandeling(display, click=False):
-    # If clicked is true return this
-    buttonClicked = 0
-
-    # Drawing buttons
+# Returns the button the mouse is currently hovering over.
+def buttonInteractivity(display):
+    # Drawing of button
     buttonLocal = pygame.Rect(BUTTON_X,BUTTON_LOCAL_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
     buttonSingle = pygame.Rect(BUTTON_X,BUTTON_SINGLE_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
     buttonMulti = pygame.Rect(BUTTON_X,BUTTON_MUTLI_Y,BUTTON_WIDTH,BUTTON_HEIGHT)
@@ -91,27 +94,63 @@ def buttonHandeling(display, click=False):
     pygame.draw.rect(display, RED, buttonMulti)
     pygame.draw.rect(display, RED, buttonQuit)
 
-    # Button interactivity
+    # Reocrding and highlighting of button
+    button = 0
     mouse = pygame.mouse.get_pos()
     if BUTTON_X < mouse[X] < BUTTON_X+BUTTON_WIDTH:
         if BUTTON_LOCAL_Y < mouse[Y] < BUTTON_LOCAL_Y+BUTTON_HEIGHT:
             pygame.draw.rect(display, LIGHT_RED, buttonLocal)
-            buttonClicked = BUTTON_LOCAL
+            button = BUTTON_LOCAL
         if BUTTON_SINGLE_Y < mouse[Y] < BUTTON_SINGLE_Y+BUTTON_HEIGHT:
             pygame.draw.rect(display, LIGHT_RED, buttonSingle)
-            buttonClicked = BUTTON_SINGLE
+            button = BUTTON_SINGLE
         if BUTTON_MUTLI_Y < mouse[Y] < BUTTON_MUTLI_Y+BUTTON_HEIGHT:
             pygame.draw.rect(display, LIGHT_RED, buttonMulti)
-            buttonClicked = BUTTON_MULTI
+            button = BUTTON_MULTI
         if BUTTON_QUIT_Y < mouse[Y] < BUTTON_QUIT_Y+BUTTON_HEIGHT:
             pygame.draw.rect(display, LIGHT_RED, buttonQuit)
-            buttonClicked = BUTTON_QUIT
+            button = BUTTON_QUIT
+
+    return button
+
+def drawButtonLabels(display):   
+    localText = MEDIUM_TEXT.render(LOCAL_LABEL, True, BLACK) 
+    localTextRect = localText.get_rect()  
+    localTextRect.center = (BUTTON_X+(BUTTON_WIDTH/2), BUTTON_LOCAL_Y+(BUTTON_HEIGHT/2))
+
+    multiText = MEDIUM_TEXT.render(MULTI_LABEL, True, BLACK) 
+    multiTextRect = localText.get_rect()  
+    multiTextRect.center = (BUTTON_X+(BUTTON_WIDTH/2), BUTTON_MUTLI_Y+(BUTTON_HEIGHT/2))
+
+    singleText = MEDIUM_TEXT.render(SINGLE_LABEL, True, BLACK) 
+    singleTextRect = singleText.get_rect()  
+    singleTextRect.center = (BUTTON_X+(BUTTON_WIDTH/2), BUTTON_SINGLE_Y+(BUTTON_HEIGHT/2))
+
+    quitText = MEDIUM_TEXT.render(QUIT_LABEL, True, BLACK) 
+    quitTextRect = quitText.get_rect()  
+    quitTextRect.center = (BUTTON_X+(BUTTON_WIDTH/2), BUTTON_QUIT_Y+(BUTTON_HEIGHT/2))
+
+    display.blit(localText, localTextRect)
+    display.blit(multiText, multiTextRect)
+    display.blit(singleText, singleTextRect)
+    display.blit(quitText, quitTextRect)
+
+# Draws the menu buttons to display. Records what button the mouse
+# is on. 
+#
+# If click is true, returns the recorded button
+def buttonHandeling(display, click=False):
+
+    button = buttonInteractivity(display)
+    drawButtonLabels(display)
 
     if click:
-        return buttonClicked
+        return button
 
 # Handles menu events. Draws menu items. Makes them interactive.
-# Does framerate for program start. Returns nothing.
+# Does framerate for program start. 
+#
+# Returns nothing.
 def menu(display, clock):
     intro = True
     while intro:
@@ -149,6 +188,8 @@ def menu(display, clock):
 
 # Starts a new game of nine mens morris and
 # passes the display to the Game to display on
+#
+# Returns nothing
 def newGame(display):
     game = Game(display)
     game.start()
