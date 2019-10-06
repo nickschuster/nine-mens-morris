@@ -13,7 +13,7 @@ class Board:
 
     # An index of a sublist XY_POINTS (XY_POINTS[6]) cooresponds to a number in NUM_POINTS 
     # which identifies the X and Y position of a piece on the board
-    # relative to other pieces (6 in NUM_POINTS is [2, 2])
+    # relative to other pieces on the board (6 in NUM_POINTS is [2, 2])
     NUM_POINTS = [[0,-1,-1,1,-1,-1,2],
                   [-1,3,-1,4,-1,5,-1],
                   [-1,-1,6,7,8,-1,-1],
@@ -24,8 +24,8 @@ class Board:
 
     # Game sprites
     BOARD_IMG = pygame.image.load("../assets/ninemensboard.png")
-    WHITE_PIECE_IMG = pygame.image.load("../assets/whitepiece.png")
-    BLACK_PIECE_IMG = pygame.image.load("../assets/blackpiece.png")
+    PLAYER_ONE_IMG = pygame.image.load("../assets/whitepiece.png")
+    PLAYER_TWO_IMG = pygame.image.load("../assets/blackpiece.png")
 
     # Sizes
     BOARD_WIDTH = 750
@@ -41,3 +41,6 @@ class Board:
     def create(self):
         self.display.blit(self.BOARD_IMG, (0,0))
         pygame.display.flip()
+
+    def placePiece(self, player):
+        

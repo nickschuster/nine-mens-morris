@@ -162,6 +162,7 @@ def menu(display, clock):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 buttonClicked = buttonHandeling(display, True)
                 if buttonClicked == BUTTON_SINGLE:
+                    intro = False
                     newGame(display)
                 elif buttonClicked == BUTTON_LOCAL:
                     #TODO
@@ -198,6 +199,4 @@ def newGame(display):
 if __name__ == "__main__":
     display, clock = setup()
     menu(display, clock)
-
-    #newGame(display)
     
