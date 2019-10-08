@@ -8,7 +8,7 @@ class Game:
     PLAYER_TWO = 2
 
     def __init__(self, display):
-        self.turn = PLAYER_ONE
+        self.turn = self.PLAYER_ONE
         self.display = display
         self.board = Board(display)
         self.playerOne = Player(self.PLAYER_ONE)
@@ -18,8 +18,8 @@ class Game:
         self.board.create()
         self.runGame()
 
-    def runGame():
+    def runGame(self):
         while True:
-            if self.turn == PLAYER_ONE:
-                if self.playerOne.phase = self.playerOne.PLACEMENT_PHASE:
+            if self.turn == self.PLAYER_ONE:
+                if self.playerOne.phase == self.playerOne.PLACEMENT_PHASE:
                     self.board.placePiece(self.playerOne)

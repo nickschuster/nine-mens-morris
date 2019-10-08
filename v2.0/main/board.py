@@ -43,4 +43,24 @@ class Board:
         pygame.display.flip()
 
     def placePiece(self, player):
-        
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                valid, position = self.getValid(event.pos)
+
+    def getValid(self, clickPos):
+        XYIndex = self.validXY(clickPos)
+        print(XYIndex)
+        return True, XYIndex
+
+    def validXY(self, clickPos):
+        index = 0
+        for XYPos in self.XY_POINTS:
+            if (clickPos[0] + 25 >= XYPos[0] and clickPos[1] + 25 >= XYPos[1] and
+                clickPos[0] - 25 <= XYPos[0] and clickPos[1] - 25 <= XYPos[1]):
+                return index
+            index += 1
+            print(clickPos)
+            print(clickPos[0] + 25 < XYPos[0] and clickPos[1] + 25 < XYPos[1])
+            print(clickPos[0] - 25 > XYPos[0] and clickPos[1] - 25 > XYPos[1])
+            print(XYPos)
+
