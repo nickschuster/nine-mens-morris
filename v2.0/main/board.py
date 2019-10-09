@@ -45,12 +45,17 @@ class Board:
     def placePiece(self, player):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-                valid, position = self.getValid(event.pos)
+                valid, index, piece = self.getValid(event.pos)
+                if valid and piece = None:
+                    self.newPiece(index, player)
 
     def getValid(self, clickPos):
+        valid = False
         XYIndex = self.validXY(clickPos)
-        print(XYIndex)
-        return True, XYIndex
+        if XYIndex != -1:
+            piece = self.piecesOnBoard.get(XYIndex, None)
+            valid = True
+        return valid, XYIndex, piece
 
     def validXY(self, clickPos):
         index = 0
@@ -59,8 +64,9 @@ class Board:
                 clickPos[0] - 25 <= XYPos[0] and clickPos[1] - 25 <= XYPos[1]):
                 return index
             index += 1
-            print(clickPos)
-            print(clickPos[0] + 25 < XYPos[0] and clickPos[1] + 25 < XYPos[1])
-            print(clickPos[0] - 25 > XYPos[0] and clickPos[1] - 25 > XYPos[1])
-            print(XYPos)
+        index = -1
+        return index
+
+    def newPiece(self, index):
+        newPiece = new Piece()
 
