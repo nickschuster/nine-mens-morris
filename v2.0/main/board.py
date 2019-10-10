@@ -1,4 +1,5 @@
 import pygame;
+from piece import Piece
 
 class Board:
     # Coordinates for visual placement
@@ -22,33 +23,40 @@ class Board:
                   [-1,18,-1,19,-1,20,-1],
                   [21,-1,-1,22,-1,-1,23]]
 
-    # Game sprites
-    BOARD_IMG = pygame.image.load("../assets/ninemensboard.png")
-    PLAYER_ONE_IMG = pygame.image.load("../assets/whitepiece.png")
-    PLAYER_TWO_IMG = pygame.image.load("../assets/blackpiece.png")
-
     # Sizes
     BOARD_WIDTH = 750
     BOARD_HEIGHT = 750
     PIECE_WIDTH = 50
     PIECE_HEIGHT = 50
 
-    def __init__(self, display):
+    # Constructor
+    def __init__(self, display, boardImg):
         self.display = display
         self.piecesOnBoard = {}
         self.placedPieces = 0
+        self.boardImg = boardImg
 
+    # Create the initial board.
+    #
+    # Returns nothing
     def create(self):
-        self.display.blit(self.BOARD_IMG, (0,0))
+        self.display.blit(self.boardImg, (0,0))
         pygame.display.flip()
 
+    # In phase one place a piece on the board.
+    #
+    # Returns nothing.
     def placePiece(self, player):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 valid, index, piece = self.getValid(event.pos)
-                if valid and piece = None:
+                if valid and piece == None:
                     self.newPiece(index, player)
 
+    # Checks if the clicked position is:
+    # valid, has an index, has a piece at its index
+    #
+    # Returns valid, index and the piece (or None)
     def getValid(self, clickPos):
         valid = False
         XYIndex = self.validXY(clickPos)
@@ -57,6 +65,9 @@ class Board:
             valid = True
         return valid, XYIndex, piece
 
+    # Determins if the click was at a valid location
+    # 
+    # Returns the index of the valid location (or -1)
     def validXY(self, clickPos):
         index = 0
         for XYPos in self.XY_POINTS:
@@ -67,6 +78,29 @@ class Board:
         index = -1
         return index
 
-    def newPiece(self, index):
-        newPiece = new Piece()
+    # Goes through the relative NUM_POINTS array to find
+    # the location of a particular index
+    # 
+    # Returns that location (-1, -1 if it doesnt exist)
+    def getRelativePosition(self, index):
+        rowIndex = 0
+        colIndex = 0
+        for col in self.NUM_POINTS:
+            for item in col:
+                if item == index:
+                    return rowIndex, colIndex
+                rowIndex += 1
+            rowIndex = 0    
+            colIndex += 1
+
+    # Creates a new piece that is owned by the player
+    # and adds that piece to the board dictionary of pieces
+    #
+    # Returns nothing
+    def newPiece(self, index, player):
+        row, col = self.getRelativePosition(index)
+        print(player.number)
+        newPiece = Piece(col, row, player.number, player.sprite)
+
+        self.piecesOnBoard[index] = newPiece
 

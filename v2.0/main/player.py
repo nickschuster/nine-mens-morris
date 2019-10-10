@@ -6,8 +6,9 @@ class Player:
     MOVING_PHASE = 1
     ROVING_PHASE = 2
 
-    def __init__(self, number):
+    def __init__(self, number, sprite):
         self.number = number
         self.phase = self.PLACEMENT_PHASE
         self.numPieces = 0
         self.hasWon = False
+        self.sprite = sprite

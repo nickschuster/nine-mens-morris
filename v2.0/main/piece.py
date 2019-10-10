@@ -1,8 +1,8 @@
 import pygame
 
 class Piece:
-    def __init__(self, posX, posY, ownedBy, sprite):
+    def __init__(self, col, row, ownedBy, sprite):
         self.sprite = sprite
-        self.posX = posX
-        self.posY = posY
+        self.col = col
+        self.row = row
         self.ownedBy = ownedBy
