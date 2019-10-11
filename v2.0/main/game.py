@@ -28,3 +28,5 @@ class Game:
             if self.turn == self.PLAYER_ONE:
                 if self.playerOne.phase == self.playerOne.PLACEMENT_PHASE:
                     self.board.placePiece(self.playerOne)
+                    print("Here")
+            self.board.updateBoard(self.playerOne, self.playerTwo)

@@ -33,7 +33,7 @@ class Board:
     def __init__(self, display, boardImg):
         self.display = display
         self.piecesOnBoard = {}
-        self.placedPieces = 0
+        self.numPieces = 0
         self.boardImg = boardImg
 
     # Create the initial board.
@@ -48,10 +48,16 @@ class Board:
     # Returns nothing.
     def placePiece(self, player):
         for event in pygame.event.get():
+            print(event)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 valid, index, piece = self.getValid(event.pos)
                 if valid and piece == None:
                     self.newPiece(index, player)
+                    self.numPieces += 1
+                    player.numPieces += 1
+                    print("placePiece")
+                    break
+        print("exit")
 
     # Checks if the clicked position is:
     # valid, has an index, has a piece at its index
@@ -60,6 +66,7 @@ class Board:
     def getValid(self, clickPos):
         valid = False
         XYIndex = self.validXY(clickPos)
+        piece = None
         if XYIndex != -1:
             piece = self.piecesOnBoard.get(XYIndex, None)
             valid = True
@@ -99,8 +106,19 @@ class Board:
     # Returns nothing
     def newPiece(self, index, player):
         row, col = self.getRelativePosition(index)
-        print(player.number)
         newPiece = Piece(col, row, player.number, player.sprite)
 
         self.piecesOnBoard[index] = newPiece
+
+    # Updates the board on the screen
+    #
+    # Returns nothing
+    def updateBoard(self, playerOne, playerTwo):
+        print("Update board")
+        self.display.blit(self.boardImg, (0,0))
+        for piece in self.piecesOnBoard:
+            if piece == playerOne.number:
+                self.display.blit(playerOne.sprite, self.XY_POINTS[piece])
+            elif piece == playerTwo.number:
+                self.display.blit(playerTwo.sprite, self.XY_POINTS[piece])
 

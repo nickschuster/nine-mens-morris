@@ -173,7 +173,6 @@ def menu(display, clock):
                 elif buttonClicked == BUTTON_QUIT:
                     pygame.quit()
                     quit()
-            print(event)
 
         # Emtpty the board and load a default bakcgorund color
         display.fill(WHITE)
