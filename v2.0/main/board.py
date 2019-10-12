@@ -46,18 +46,14 @@ class Board:
     # In phase one place a piece on the board.
     #
     # Returns nothing.
-    def placePiece(self, player):
-        for event in pygame.event.get():
-            print(event)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                valid, index, piece = self.getValid(event.pos)
-                if valid and piece == None:
-                    self.newPiece(index, player)
-                    self.numPieces += 1
-                    player.numPieces += 1
-                    print("placePiece")
-                    break
-        print("exit")
+    def placePiece(self, player, clickPos):
+        print("enter")
+        valid, index, piece = self.getValid(clickPos)
+        if valid and piece == None:
+            self.newPiece(index, player)
+            self.numPieces += 1
+            player.numPieces += 1
+            print("piece placed")
 
     # Checks if the clicked position is:
     # valid, has an index, has a piece at its index
@@ -114,11 +110,14 @@ class Board:
     #
     # Returns nothing
     def updateBoard(self, playerOne, playerTwo):
-        print("Update board")
         self.display.blit(self.boardImg, (0,0))
         for piece in self.piecesOnBoard:
-            if piece == playerOne.number:
-                self.display.blit(playerOne.sprite, self.XY_POINTS[piece])
+            if self.piecesOnBoard[piece].ownedBy == playerOne.number:
+                print("true")
+                self.display.blit(self.piecesOnBoard[piece].sprite, self.XY_POINTS[piece])
+                print(self.XY_POINTS[piece])
+                print(self.piecesOnBoard[piece].sprite)
+                print("displayed")
             elif piece == playerTwo.number:
                 self.display.blit(playerTwo.sprite, self.XY_POINTS[piece])
 

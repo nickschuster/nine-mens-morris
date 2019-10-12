@@ -25,8 +25,9 @@ class Game:
 
     def runGame(self):
         while True:
-            if self.turn == self.PLAYER_ONE:
-                if self.playerOne.phase == self.playerOne.PLACEMENT_PHASE:
-                    self.board.placePiece(self.playerOne)
-                    print("Here")
-            self.board.updateBoard(self.playerOne, self.playerTwo)
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.turn == self.playerOne.number:
+                        if self.playerOne.phase == self.playerOne.PLACEMENT_PHASE:
+                            self.board.placePiece(self.playerOne, event.pos)
+                            self.board.updateBoard(self.playerOne, self.playerTwo)
