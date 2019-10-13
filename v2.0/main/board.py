@@ -28,6 +28,7 @@ class Board:
     BOARD_HEIGHT = 750
     PIECE_WIDTH = 50
     PIECE_HEIGHT = 50
+    PIECE_HITBOX = 25
 
     # Constructor
     def __init__(self, display, boardImg):
@@ -113,11 +114,10 @@ class Board:
         self.display.blit(self.boardImg, (0,0))
         for piece in self.piecesOnBoard:
             if self.piecesOnBoard[piece].ownedBy == playerOne.number:
-                print("true")
-                self.display.blit(self.piecesOnBoard[piece].sprite, self.XY_POINTS[piece])
-                print(self.XY_POINTS[piece])
-                print(self.piecesOnBoard[piece].sprite)
-                print("displayed")
+                self.display.blit(self.piecesOnBoard[piece].sprite, 
+                    [x-self.PIECE_HITBOX for x in self.XY_POINTS[piece]])
             elif piece == playerTwo.number:
-                self.display.blit(playerTwo.sprite, self.XY_POINTS[piece])
+                self.display.blit(playerTwo.sprite, 
+                    [x-self.PIECE_HITBOX for x in self.XY_POINTS[piece]])
+        pygame.display.flip()
 
