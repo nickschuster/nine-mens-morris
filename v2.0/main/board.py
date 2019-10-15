@@ -48,13 +48,11 @@ class Board:
     #
     # Returns nothing.
     def placePiece(self, player, clickPos):
-        print("enter")
         valid, index, piece = self.getValid(clickPos)
         if valid and piece == None:
             self.newPiece(index, player)
             self.numPieces += 1
             player.numPieces += 1
-            print("piece placed")
 
     # Checks if the clicked position is:
     # valid, has an index, has a piece at its index
@@ -89,13 +87,13 @@ class Board:
     def getRelativePosition(self, index):
         rowIndex = 0
         colIndex = 0
-        for col in self.NUM_POINTS:
-            for item in col:
+        for row in self.NUM_POINTS:
+            for item in row:
                 if item == index:
                     return rowIndex, colIndex
-                rowIndex += 1
-            rowIndex = 0    
-            colIndex += 1
+                colIndex += 1
+            colIndex = 0    
+            rowIndex += 1
 
     # Creates a new piece that is owned by the player
     # and adds that piece to the board dictionary of pieces
@@ -104,6 +102,7 @@ class Board:
     def newPiece(self, index, player):
         row, col = self.getRelativePosition(index)
         newPiece = Piece(col, row, player.number, player.sprite)
+        print(row, col)
 
         self.piecesOnBoard[index] = newPiece
 
@@ -120,4 +119,8 @@ class Board:
                 self.display.blit(playerTwo.sprite, 
                     [x-self.PIECE_HITBOX for x in self.XY_POINTS[piece]])
         pygame.display.flip()
+
+    def checkForMill(self, player):
+        return True
+
 
