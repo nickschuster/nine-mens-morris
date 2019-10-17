@@ -121,6 +121,39 @@ class Board:
         pygame.display.flip()
 
     def checkForMill(self, player):
-        return True
+        millTotal = []
+        rowMill = []
+        colMill = []
+        rowDiff = 0
+        colDiff = 0
+        for index in range(len(self.NUM_POINTS)*len(self.NUM_POINTS)):
+            piece = self.piecesOnBoard.get(index, None)
+            print("Index: ", index)
+            if piece != None:
+                if piece.ownedBy == player.number:
+                    print("row lenght: ", len(rowMill))
+                    if len(rowMill) == 2:
+                        colDiff = rowMill[0].col - rowMill[1].col
+                        rowMill.append(piece)
+                        print("row diff first: ", rowDiff)
+                    elif len(rowMill) == 3:
+                        newDiff = rowMill[1].col - rowMill[2].col
+                        print("new diff: ", newDiff)
+                        if newDiff == rowDiff:
+                            rowMill.append(piece)
+                        else:
+                            rowMill = []
+                            rowMill.append(piece)
+                    else:
+                        rowMill.append(piece)
+                if len(rowMill) == 3:
+                    millTotal.append(rowMill)
+        print(millTotal)
+
+
+
+
+
+
 
 

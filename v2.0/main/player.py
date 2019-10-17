@@ -12,6 +12,7 @@ class Player:
         self.numPieces = 0
         self.hasWon = False
         self.sprite = sprite
+        self.oldMills = []
 
     # Updates the phase of the player
     #
