@@ -102,7 +102,6 @@ class Board:
     def newPiece(self, index, player):
         row, col = self.getRelativePosition(index)
         newPiece = Piece(col, row, player.number, player.sprite)
-        print(row, col)
 
         self.piecesOnBoard[index] = newPiece
 
@@ -124,57 +123,45 @@ class Board:
     # 
     # Returns an integer that represents the count of new mills.
     def checkForMill(self, player):
-        millTotal = []
         rowMill = []
         colMill = []
-        rowDiff = 0
-        colDiff = 0
-        for index in range(len(self.NUM_POINTS)*len(self.NUM_POINTS)):
-            piece = self.piecesOnBoard.get(index, None)
-            # Check every index on the board
-            if piece != None:
-                if piece.ownedBy == player.number:
-                    # First found piece in row
-                    rowMill.append(piece)
+        totalMills = []
 
-                    print("row lenght: ", len(rowMill))
-                    print("row content: ", rowMill)
-                    # Compare first two pieces
-                    if len(rowMill) == 2:
-                        # Make sure piece 1 and 2 are on the same row
-                        if rowMill[0].row == rowMill[1].row:
-                            # Measure distance between piece 1 and 2
-                            colDiff = rowMill[0].col - rowMill[1].col
-                            print("first diff: ", colDiff)
-                        # If they arent: empty the rowMill array
-                        else:
-                            rowMill = []
+        for rowIndex in range(len(self.NUM_POINTS)):
+            for colIndex in range(len(self.NUM_POINTS)):
+                rowItem = self.NUM_POINTS[rowIndex][colIndex]
+                colItem = self.NUM_POINTS[colIndex][rowIndex]
+                if rowItem != -1:
+                    piece = self.piecesOnBoard.get(rowItem, None)
+                    if piece != None:
+                        if piece.ownedBy == player.number:
                             rowMill.append(piece)
-
-                    # Compare piece 2 and piece 3
-                    if len(rowMill) == 3:
-                        # Make sure piece 2 and 3 are on the same row
-                        if rowMill[1].row == rowMill[2].row:
-                            # Calculate difference between piece 2 and 3
-                            newDiff = rowMill[1].col - rowMill[2].col
-                            print("new diff: ", newDiff)
-                            print("first diff again: ", colDiff)
-                            # Comapre to distance between 1 and 2
-                            if newDiff != colDiff:
-                                print("wrong diff")
+                            if len(rowMill) == 2:
+                                if rowMill[0].row == rowMill[1].row:
+                                    colDiff = rowMill[0].col - rowMill[1].col
+                                else:
+                                    rowMill = []
+                                    rowMill.append(piece)
+                            if len(rowMill) == 3:
+                                if rowMill[1].row == rowMill[1].row:
+                                    newColDiff = rowMill[1].col - rowMill[2].col
+                                    if newColDiff != colDiff:
+                                        if rowMill[0].col == 2:
+                                            print("HERE")
+                                            temp = [rowMill[1], rowMill[2]]
+                                            rowMill = []
+                                            rowMill.append(temp[0])
+                                            rowMill.append(temp[1])
+                                        else:
+                                            rowMill = []
+                                            rowMill.append(piece)
+                                else:
+                                    rowMill = []
+                                    rowMill.append(piece)
+                            if len(rowMill) == 3:
+                                totalMills.append(rowMill)
                                 rowMill = []
-                                rowMill.append(piece)
-                        else:
-                            print("wrong row")
-                            rowMill = []
-                            rowMill.append(piece)
-                print("end: ", rowMill)
-                if len(rowMill) == 3:
-                    print("here")
-                    millTotal.append(rowMill)
-                    rowMill = []
-        print(millTotal)
-        print(len(millTotal) / 3)
+        print(len(totalMills))
         # Almost complete certain placements take away a mill.
         # TODO
 
