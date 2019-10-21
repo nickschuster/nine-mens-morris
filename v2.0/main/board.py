@@ -126,7 +126,6 @@ class Board:
         rowMill = []
         colMill = []
         totalMills = []
-
         for rowIndex in range(len(self.NUM_POINTS)):
             for colIndex in range(len(self.NUM_POINTS)):
                 rowItem = self.NUM_POINTS[rowIndex][colIndex]
@@ -138,20 +137,23 @@ class Board:
                             rowMill.append(piece)
                             if len(rowMill) == 2:
                                 if rowMill[0].row == rowMill[1].row:
-                                    colDiff = rowMill[0].col - rowMill[1].col
+                                    if rowMill[0].row == 3:
+                                        colDiff = -1
+                                    else:
+                                        colDiff = rowMill[0].col - rowMill[1].col
                                 else:
                                     rowMill = []
                                     rowMill.append(piece)
                             if len(rowMill) == 3:
-                                if rowMill[1].row == rowMill[1].row:
+                                if rowMill[1].row == rowMill[2].row:
                                     newColDiff = rowMill[1].col - rowMill[2].col
                                     if newColDiff != colDiff:
                                         if rowMill[0].col == 2:
-                                            print("HERE")
                                             temp = [rowMill[1], rowMill[2]]
                                             rowMill = []
                                             rowMill.append(temp[0])
                                             rowMill.append(temp[1])
+                                            colDiff == rowMill[0].col - rowMill[1].col
                                         else:
                                             rowMill = []
                                             rowMill.append(piece)
@@ -162,8 +164,6 @@ class Board:
                                 totalMills.append(rowMill)
                                 rowMill = []
         print(len(totalMills))
-        # Almost complete certain placements take away a mill.
-        # TODO
 
 
 
