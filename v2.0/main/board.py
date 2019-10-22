@@ -163,6 +163,39 @@ class Board:
                             if len(rowMill) == 3:
                                 totalMills.append(rowMill)
                                 rowMill = []
+                if colItem != -1:
+                    piece = self.piecesOnBoard.get(colItem, None)
+                    if piece != None:
+                        if piece.ownedBy == player.number:
+                            colMill.append(piece)
+                            if len(colMill) == 2:
+                                if colMill[0].col == colMill[1].col:
+                                    if colMill[0].col == 3:
+                                        rowDiff = -1
+                                    else:
+                                        rowDiff = colMill[0].row - colMill[1].row
+                                else:
+                                    colMill = []
+                                    colMill.append(piece)
+                            if len(colMill) == 3:
+                                if colMill[1].col == colMill[2].col:
+                                    newRowDiff = colMill[1].row - colMill[2].row
+                                    if newRowDiff != rowDiff:
+                                        if colMill[0].row == 2:
+                                            temp = [colMill[1], colMill[2]]
+                                            colMill = []
+                                            colMill.append(temp[0])
+                                            colMill.append(temp[1])
+                                            rowDiff == colMill[0].row - colMill[1].row
+                                        else:
+                                            colMill = []
+                                            colMill.append(piece)
+                                else:
+                                    colMill = []
+                                    colMill.append(piece)
+                            if len(colMill) == 3:
+                                totalMills.append(colMill)
+                                colMill = []
         print(len(totalMills))
 
 
