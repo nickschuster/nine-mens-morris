@@ -119,7 +119,20 @@ class Board:
                     [x-self.PIECE_HITBOX for x in self.XY_POINTS[piece]])
         pygame.display.flip()
 
-    # Checks for mills on the board owned by 'player'
+    # Calculates the amount of new mills as an int. Updates
+    # the old mills to the current mills on the board.
+    #
+    # Returns a count of the mills as an int.
+    def calculateNewMills(self, totalMills, player):
+        count = 0
+        for mill in totalMills:
+            if mill not in player.oldMills:
+                count += 1
+        player.oldMills = totalMills
+        return count
+
+    # Checks for mills on the board owned by 'player'. Refer to
+    # NUM_POINTS for the logic of checking for a mill.
     # 
     # Returns an integer that represents the count of new mills.
     def checkForMill(self, player):
@@ -134,20 +147,28 @@ class Board:
                     piece = self.piecesOnBoard.get(rowItem, None)
                     if piece != None:
                         if piece.ownedBy == player.number:
+                            # If a piece exists and is owned by the correct player
                             rowMill.append(piece)
+                            # Once two have been grabed
                             if len(rowMill) == 2:
+                                # Are they on the same row/col
                                 if rowMill[0].row == rowMill[1].row:
+                                    # Are they in the center row/col of the board
                                     if rowMill[0].row == 3:
                                         colDiff = -1
                                     else:
                                         colDiff = rowMill[0].col - rowMill[1].col
                                 else:
+                                    # Reset and start again
                                     rowMill = []
                                     rowMill.append(piece)
+                            # Once three pieces have been grabed and at least two are valid
                             if len(rowMill) == 3:
+                                # Is the third piece on the same row/col
                                 if rowMill[1].row == rowMill[2].row:
                                     newColDiff = rowMill[1].col - rowMill[2].col
                                     if newColDiff != colDiff:
+                                        # Are they in the center row/col of the board
                                         if rowMill[0].col == 2:
                                             temp = [rowMill[1], rowMill[2]]
                                             rowMill = []
@@ -155,14 +176,18 @@ class Board:
                                             rowMill.append(temp[1])
                                             colDiff == rowMill[0].col - rowMill[1].col
                                         else:
+                                            # Reset and start again
                                             rowMill = []
                                             rowMill.append(piece)
                                 else:
+                                    # Reset and start again
                                     rowMill = []
                                     rowMill.append(piece)
                             if len(rowMill) == 3:
+                                # Three valid pieces aka: a mill
                                 totalMills.append(rowMill)
                                 rowMill = []
+                # SAME LOGIC AS FOR ROWS
                 if colItem != -1:
                     piece = self.piecesOnBoard.get(colItem, None)
                     if piece != None:
@@ -196,7 +221,10 @@ class Board:
                             if len(colMill) == 3:
                                 totalMills.append(colMill)
                                 colMill = []
-        print(len(totalMills))
+
+        newMillCount = self.calculateNewMills(totalMills, player)
+        print(newMillCount)
+        return newMillCount
 
 
 

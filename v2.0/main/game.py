@@ -30,9 +30,11 @@ class Game:
                     if self.turn == self.playerOne.number:
                         if self.playerOne.phase == self.playerOne.PLACEMENT_PHASE:
                             self.board.placePiece(self.playerOne, event.pos)
-                        self.board.checkForMill(self.playerOne)
+                        count = self.board.checkForMill(self.playerOne)
+                        
                     elif self.turn == self.playerTwo.number:
                         if self.playerTwo.phase == self.playerOne.PLACEMENT_PHASE:
                             self.board.plcaePiece(self.playerOne, event.pos)
                         self.board.checkForMill(self.playerTwo)
+
                     self.board.updateBoard(self.playerOne, self.playerTwo)
