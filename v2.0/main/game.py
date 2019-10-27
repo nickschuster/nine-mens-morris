@@ -15,12 +15,13 @@ class Game:
     PLAYER_ONE_IMG = pygame.image.load("../assets/whitepiece.png")
     PLAYER_TWO_IMG = pygame.image.load("../assets/blackpiece.png")
 
-    def __init__(self, display):
+    def __init__(self, display, clock):
         self.display = display
         self.board = Board(display, self.BOARD_IMG)
         self.playerOne = Player(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
         self.playerTwo = Player(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
         self.turn = self.playerOne
+        self.clock = clock
 
     # Starts game execution
     def start(self):
@@ -46,7 +47,19 @@ class Game:
                     if self.turn.phase == self.turn.PLACEMENT_PHASE:
                         validAction = self.board.placePiece(self.turn, event.pos)
 
+                    if self.turn.phase == self.turn.MOVING_PHASE:
+                        validAction = self.board.movePiece(self.turn, event.pos, self.display)
+
                     if validAction:
                         count = self.board.checkForMill(self.turn)
-                        self.board.updateBoard(self.playerOne, self.playerTwo)
-                        #self.changeTurn()
+                        self.board.updateBoard()
+                        self.changeTurn()
+
+                        # Update player phase
+                        if self.turn.phase == self.turn.MOVING_PHASE:
+                            self.turn.updatePhase
+
+                        # Update game phase
+                        if self.board.numPieces == 18:
+                            self.playerOne.updatePhase(1)
+                            self.playerTwo.updatePhase(1)

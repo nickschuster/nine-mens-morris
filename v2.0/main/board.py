@@ -56,6 +56,33 @@ class Board:
             return True
         return False
 
+    def movePiece(self, player, clickPos, display):
+        valid, index, piece = self.getValid(clickPos)
+        if valid and piece != None:
+            if piece.ownedBy == player.number:
+                mouseX, mouseY = pygame.mouse.get_pos()
+                notPlaced = True
+                while notPlaced:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            quit()
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            newValid, newIndex, newPiece = self.getValid((mouseX, mouseY))
+                            if newValid:
+                                if index == newIndex:
+                                    self.updateBoard()
+                                    return False
+                                # else TODO
+                        if event.type == pygame.MOUSEMOTION:
+                            self.updateBoard(index)
+                            mouseX, mouseY = event.pos
+                            display.blit(piece.sprite, (mouseX-self.PIECE_HITBOX, 
+                                                        mouseY-self.PIECE_HITBOX))
+                            pygame.display.flip()
+                            break
+
+
     # Checks if the clicked position is:
     # valid, has an index, has a piece at its index
     #
@@ -110,15 +137,12 @@ class Board:
     # Updates the board on the screen
     #
     # Returns nothing
-    def updateBoard(self, playerOne, playerTwo):
+    def updateBoard(self, ignore=-1):
         self.display.blit(self.boardImg, (0,0))
-        for piece in self.piecesOnBoard:
-            if self.piecesOnBoard[piece].ownedBy == playerOne.number:
-                self.display.blit(self.piecesOnBoard[piece].sprite, 
-                    [x-self.PIECE_HITBOX for x in self.XY_POINTS[piece]])
-            else:
-                self.display.blit(self.piecesOnBoard[piece].sprite,
-                    [x-self.PIECE_HITBOX for x in self.XY_POINTS[piece]])
+        for pieceIndex in self.piecesOnBoard:
+            if pieceIndex != ignore:
+                self.display.blit(self.piecesOnBoard[pieceIndex].sprite, 
+                    [x-self.PIECE_HITBOX for x in self.XY_POINTS[pieceIndex]])
         pygame.display.flip()
 
     # Calculates the amount of new mills as an int. Updates

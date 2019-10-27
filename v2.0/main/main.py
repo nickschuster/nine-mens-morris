@@ -189,15 +189,17 @@ def menu(display, clock):
 
     #buttonHandeling(display)
     if single:
-        newGame(display)
+        newGame(display, clock)
 
 
 # Starts a new game of nine mens morris and
 # passes the display to the Game to display on
 #
 # Returns nothing
-def newGame(display):
-    game = Game(display)
+def newGame(display, clock):
+    # Hide menu on game start
+    display = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
+    game = Game(display, clock)
     game.start()
 
 # Starts program execution
