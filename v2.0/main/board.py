@@ -145,90 +145,74 @@ class Board:
             for colIndex in range(len(self.NUM_POINTS)):
                 rowItem = self.NUM_POINTS[rowIndex][colIndex]
                 colItem = self.NUM_POINTS[colIndex][rowIndex]
+                # Ensure a valid index
                 if rowItem != -1:
                     piece = self.piecesOnBoard.get(rowItem, None)
+                    # A piece exists at a valid index
                     if piece != None:
+                        # Piece is owned by current player
                         if piece.ownedBy == player.number:
-                            # If a piece exists and is owned by the correct player
                             rowMill.append(piece)
-                            # Once two have been grabed
+                            # Two pieces in a row
                             if len(rowMill) == 2:
-                                # Are they on the same row/col
-                                if rowMill[0].row == rowMill[1].row:
-                                    # Are they in the center row/col of the board
-                                    if rowMill[0].row == 3:
-                                        colDiff = -1
-                                    else:
-                                        colDiff = rowMill[0].col - rowMill[1].col
-                                else:
-                                    # Reset and start again
+                                # Are they on the same row
+                                if rowMill[0].row != rowMill[1].row:
+                                    # Reset
                                     rowMill = []
                                     rowMill.append(piece)
-                            # Once three pieces have been grabed and at least two are valid
+                                # Are they on row 3 (4), refer to NUM_POINTS
+                                elif rowMill[0].row == 3:
+                                    # Check distance from each other
+                                    if rowMill[0].col - rowMill[1].col != -1:
+                                        # Reset
+                                        rowMill = []
+                                        rowMill.append(piece)
+                            # Three in a row
                             if len(rowMill) == 3:
-                                # Is the third piece on the same row/col
-                                if rowMill[1].row == rowMill[2].row:
-                                    newColDiff = rowMill[1].col - rowMill[2].col
-                                    if newColDiff != colDiff:
-                                        # Are they in the center row/col of the board
-                                        if rowMill[0].row == 3:
-                                            temp = [rowMill[1], rowMill[2]]
-                                            rowMill = []
-                                            rowMill.append(temp[0])
-                                            rowMill.append(temp[1])
-                                            colDiff == rowMill[0].col - rowMill[1].col
-                                        else:
-                                            # Reset and start again
-                                            rowMill = []
-                                            rowMill.append(piece)
-                                else:
-                                    # Reset and start again
+                                # Last two on same row
+                                if rowMill[1].row != rowMill[2].row:
+                                    # Reset
                                     rowMill = []
                                     rowMill.append(piece)
+                                # Are they on row 3 (4), refer to NUM_POINTS
+                                elif rowMill[2].row == 3:
+                                    # Check distance from each other
+                                    if rowMill[1].col - rowMill[2].col != -1:
+                                        # Reset
+                                        rowMill = []
+                                        rowMill.append(piece)
+                            # Valid 3 in a row/Mill found
                             if len(rowMill) == 3:
-                                # Three valid pieces aka: a mill
                                 totalMills.append(rowMill)
                                 rowMill = []
-                # SAME LOGIC AS FOR ROWS
+                # Refer to row logic
                 if colItem != -1:
                     piece = self.piecesOnBoard.get(colItem, None)
                     if piece != None:
                         if piece.ownedBy == player.number:
                             colMill.append(piece)
                             if len(colMill) == 2:
-                                if colMill[0].col == colMill[1].col:
-                                    if colMill[0].col == 3:
-                                        rowDiff = -1
-                                    else:
-                                        rowDiff = colMill[0].row - colMill[1].row
-                                else:
+                                if colMill[0].col != colMill[1].col:
                                     colMill = []
                                     colMill.append(piece)
+                                elif colMill[0].col == 3:
+                                    if colMill[0].row - colMill[1].row != -1:
+                                        colMill = []
+                                        colMill.append(piece)
                             if len(colMill) == 3:
-                                if colMill[1].col == colMill[2].col:
-                                    newRowDiff = colMill[1].row - colMill[2].row
-                                    if newRowDiff != rowDiff:
-                                        if colMill[0].col == 3:
-                                            temp = [colMill[1], colMill[2]]
-                                            colMill = []
-                                            colMill.append(temp[0])
-                                            colMill.append(temp[1])
-                                            rowDiff == colMill[0].row - colMill[1].row
-                                        else:
-                                            colMill = []
-                                            colMill.append(piece)
-                                else:
+                                if colMill[1].col != colMill[2].col:
                                     colMill = []
                                     colMill.append(piece)
+                                elif colMill[2].col == 3:
+                                    if colMill[1].row - colMill[2].row != -1:
+                                        colMill = []
+                                        colMill.append(piece)
                             if len(colMill) == 3:
                                 totalMills.append(colMill)
                                 colMill = []
-
-        print(len(totalMills))
-        newMillCount = self.calculateNewMills(totalMills, player)
-        print(newMillCount)
-        return newMillCount
-
+        # Check how many mills are new
+        count = self.calculateNewMills(totalMills, player)
+        return count
 
 
 
