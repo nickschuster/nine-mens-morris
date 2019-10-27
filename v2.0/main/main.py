@@ -163,13 +163,14 @@ def menu(display, clock):
                 buttonClicked = buttonHandeling(display, True)
                 if buttonClicked == BUTTON_SINGLE:
                     intro = False
-                    newGame(display)
+                    single = True
+                    break
                 elif buttonClicked == BUTTON_LOCAL:
                     #TODO
-                    newGame(display)
+                    local = True
                 elif buttonClicked == BUTTON_MULTI:
                     #TODO
-                    newGame(display)
+                    multi = True
                 elif buttonClicked == BUTTON_QUIT:
                     pygame.quit()
                     quit()
@@ -185,6 +186,10 @@ def menu(display, clock):
         # Update display and tick framerate
         pygame.display.update()
         clock.tick(30)
+
+    #buttonHandeling(display)
+    if single:
+        newGame(display)
 
 
 # Starts a new game of nine mens morris and

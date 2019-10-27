@@ -18,7 +18,7 @@ class Player:
     #
     # Returns nothing
     def updatePhase(self, phase=-1):
-        if numPieces <= 3:
+        if self.numPieces <= 3:
             self.phase = self.ROVING_PHASE
         elif phase != -1:
             self.phase = phase

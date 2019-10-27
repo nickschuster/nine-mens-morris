@@ -46,13 +46,15 @@ class Board:
 
     # In phase one place a piece on the board.
     #
-    # Returns nothing.
+    # Returns true or false depending on if a piece was placed.
     def placePiece(self, player, clickPos):
         valid, index, piece = self.getValid(clickPos)
         if valid and piece == None:
             self.newPiece(index, player)
             self.numPieces += 1
             player.numPieces += 1
+            return True
+        return False
 
     # Checks if the clicked position is:
     # valid, has an index, has a piece at its index
@@ -114,8 +116,8 @@ class Board:
             if self.piecesOnBoard[piece].ownedBy == playerOne.number:
                 self.display.blit(self.piecesOnBoard[piece].sprite, 
                     [x-self.PIECE_HITBOX for x in self.XY_POINTS[piece]])
-            elif piece == playerTwo.number:
-                self.display.blit(playerTwo.sprite, 
+            else:
+                self.display.blit(self.piecesOnBoard[piece].sprite,
                     [x-self.PIECE_HITBOX for x in self.XY_POINTS[piece]])
         pygame.display.flip()
 
@@ -169,7 +171,7 @@ class Board:
                                     newColDiff = rowMill[1].col - rowMill[2].col
                                     if newColDiff != colDiff:
                                         # Are they in the center row/col of the board
-                                        if rowMill[0].col == 2:
+                                        if rowMill[0].row == 3:
                                             temp = [rowMill[1], rowMill[2]]
                                             rowMill = []
                                             rowMill.append(temp[0])
@@ -206,7 +208,7 @@ class Board:
                                 if colMill[1].col == colMill[2].col:
                                     newRowDiff = colMill[1].row - colMill[2].row
                                     if newRowDiff != rowDiff:
-                                        if colMill[0].row == 2:
+                                        if colMill[0].col == 3:
                                             temp = [colMill[1], colMill[2]]
                                             colMill = []
                                             colMill.append(temp[0])
@@ -222,6 +224,7 @@ class Board:
                                 totalMills.append(colMill)
                                 colMill = []
 
+        print(len(totalMills))
         newMillCount = self.calculateNewMills(totalMills, player)
         print(newMillCount)
         return newMillCount
