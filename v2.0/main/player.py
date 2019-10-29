@@ -10,7 +10,7 @@ class Player:
         self.number = number
         self.phase = self.PLACEMENT_PHASE
         self.numPieces = 0
-        self.hasWon = False
+        self.notWon = True
         self.sprite = sprite
         self.oldMills = []
 

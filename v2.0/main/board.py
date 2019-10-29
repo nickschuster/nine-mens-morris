@@ -56,6 +56,12 @@ class Board:
             return True
         return False
 
+    # Moves a piece to a valid location on the board. 
+    # If the movement is the same as the same position
+    # as the original piece it exists.
+    #
+    # Returns true or false depending on if a valid move occurred.
+    # An inplace move is not considered valid.
     def movePiece(self, player, clickPos, display):
         valid, index, piece = self.getValid(clickPos)
         if valid and piece != None:
@@ -73,7 +79,8 @@ class Board:
                                 if index == newIndex:
                                     self.updateBoard()
                                     return False
-                                # else TODO
+                                else:
+                                    validMove = self.validateMove(newIndex, index, player)
                         if event.type == pygame.MOUSEMOTION:
                             self.updateBoard(index)
                             mouseX, mouseY = event.pos
@@ -81,6 +88,28 @@ class Board:
                                                         mouseY-self.PIECE_HITBOX))
                             pygame.display.flip()
                             break
+
+    # Validates a movement of a piece. Assumes it was
+    # called from movePiece function.
+    #
+    # Returns true or false depending on move validity.
+    def validateMove(self, newIndex, oldIndex, player):
+        if player.phase == player.ROVING_PHASE:
+            return True
+        else:
+            validMoves = self.calculateValidMove(player, newIndex, oldIndex)
+            if validMoves:
+                return True
+            else:
+                return False
+
+    # Maybe not nessescary
+    def calculateValidMove(self, player, newIndex, oldIndex):
+        newRow, newCol = self.getRelativePosition(newIndex)
+        oldRow, oldCol = self.getRelativePosition(oldIndex)
+        rowDiff = newRow-oldRow
+        colDiff = newCol-oldCol
+        #if rowDiff 
 
 
     # Checks if the clicked position is:
