@@ -76,11 +76,15 @@ class Board:
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             newValid, newIndex, newPiece = self.getValid((mouseX, mouseY))
                             if newValid:
-                                if index == newIndex:
+                                validMove = self.validateMove(newIndex, index, player)
+                                if validMove:
+                                    self.piecesOnBoard[newIndex] = piece
+                                    del self.piecesOnBoard[index]
+                                    self.updateBoard()
+                                    return True
+                                else:
                                     self.updateBoard()
                                     return False
-                                else:
-                                    validMove = self.validateMove(newIndex, index, player)
                         if event.type == pygame.MOUSEMOTION:
                             self.updateBoard(index)
                             mouseX, mouseY = event.pos
@@ -96,20 +100,24 @@ class Board:
     def validateMove(self, newIndex, oldIndex, player):
         if player.phase == player.ROVING_PHASE:
             return True
+        elif newIndex == oldIndex:
+            return False
         else:
-            validMoves = self.calculateValidMove(player, newIndex, oldIndex)
-            if validMoves:
-                return True
-            else:
+            oldRow, oldCol = self.getRelativePosition(oldIndex)
+            newRow, newCol = self.getRelativePosition(newIndex)
+            rowDiff = oldRow - newRow
+            colDiff = oldCol - newCol
+            if rowDiff != 0 and colDiff != 0:
                 return False
-
-    # Maybe not nessescary
-    def calculateValidMove(self, player, newIndex, oldIndex):
-        newRow, newCol = self.getRelativePosition(newIndex)
-        oldRow, oldCol = self.getRelativePosition(oldIndex)
-        rowDiff = newRow-oldRow
-        colDiff = newCol-oldCol
-        #if rowDiff 
+            elif rowDiff != 0:
+                if oldRow == 0 or oldRow == 6:
+                    if rowDiff != 3 or rowDiff != -3:
+                        return False
+            elif colDiff != 0: 
+                if oldCol == 0 or oldCol == 6:
+                    if colDiff != 3 or colDiff != -3:
+                        return False
+            return True
 
 
     # Checks if the clicked position is:
@@ -163,7 +171,8 @@ class Board:
 
         self.piecesOnBoard[index] = newPiece
 
-    # Updates the board on the screen
+    # Updates the board on the screen. Can choose to 
+    # ignore one piece. Used when that piece is in movement.
     #
     # Returns nothing
     def updateBoard(self, ignore=-1):
