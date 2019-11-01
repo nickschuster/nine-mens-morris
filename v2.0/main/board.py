@@ -137,6 +137,32 @@ class Board:
                         return True
             return False
 
+    # Takes pieces from the board that are not in a mill.
+    #
+    # Returns nothing
+    def takePiece(self, count, oppPlayer):
+        canRemove = self.calculateRemoveable(oppPlayer)
+        while count != 0 and canRemove:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    valid, XYIndex, piece = self.getValid(event.pos)
+                    if valid:
+                        row, col = self.getRelativePosition(XYIndex)
+                        if not ((row, col) in oppPlayer.oldMills):
+                            del self.piecesOnBoard[XYIndex]
+                            oppPlayer.numPieces -= 1
+                            count -= 1
+
+    # Tests to make sure there is actually a piece that can
+    # be removed from the board.
+    #
+    # Returns true or false depending.
+    def calculateRemoveable(self, oppPlayer):
+        for pieceIndex in self.piecesOnBoard:
+            piece = self.piecesOnBoard[pieceIndex]
+            if piece not in oppPlayer.oldMills:
+                return True
+        return False
 
     # Checks if the clicked position is:
     # valid, has an index, has a piece at its index

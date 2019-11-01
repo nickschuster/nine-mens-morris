@@ -23,19 +23,27 @@ class Game:
         self.turn = self.playerOne
         self.clock = clock
 
-    # Starts game execution
+    # Starts game execution.
     def start(self):
         self.board.create()
         self.runGame()
 
-    # Changes the game turn
+    # Changes the game turn.
     def changeTurn(self):
         if self.turn == self.playerOne:
             self.turn = self.playerTwo
         else:
             self.turn = self.playerOne
 
-    # Main game loop
+    # Returns the player opposite to 
+    # the current turn.
+    def notTurn(self):
+        if self.turn == self.playerOne:
+            return self.playerTwo
+        else:
+            return self.playerOne
+
+    # Main game loop.
     def runGame(self):
         while True:
             for event in pygame.event.get():
@@ -51,7 +59,9 @@ class Game:
                         validAction = self.board.movePiece(self.turn, event.pos, self.display)
 
                     if validAction:
+                        self.board.updateBoard()
                         count = self.board.checkForMill(self.turn)
+                        self.board.takePiece(count, self.notTurn())
                         self.board.updateBoard()
                         self.changeTurn()
 
