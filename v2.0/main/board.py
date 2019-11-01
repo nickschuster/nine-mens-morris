@@ -93,8 +93,8 @@ class Board:
                             pygame.display.flip()
                             break
 
-    # Validates a movement of a piece. Assumes it was
-    # called from movePiece function.
+    # Validates a movement of a piece from a specific
+    # player against an oldIndex and a newIndex of a piece.
     #
     # Returns true or false depending on move validity.
     def validateMove(self, newIndex, oldIndex, player):
@@ -102,22 +102,40 @@ class Board:
             return True
         elif newIndex == oldIndex:
             return False
+        elif self.piecesOnBoard.get(newIndex, None) != None:
+            return False
         else:
             oldRow, oldCol = self.getRelativePosition(oldIndex)
             newRow, newCol = self.getRelativePosition(newIndex)
             rowDiff = oldRow - newRow
             colDiff = oldCol - newCol
-            if rowDiff != 0 and colDiff != 0:
+            print(oldRow, newRow, rowDiff)
+            print(oldCol, newCol, colDiff)
+            if not (rowDiff == 0) != (colDiff == 0):
                 return False
-            elif rowDiff != 0:
+            if colDiff != 0:
                 if oldRow == 0 or oldRow == 6:
-                    if rowDiff != 3 or rowDiff != -3:
-                        return False
-            elif colDiff != 0: 
+                    if colDiff == -3 or colDiff == 3:
+                        print("2")
+                        return True
+                if oldRow == 1 or oldRow == 5:
+                    if colDiff == -2 or colDiff == 2:
+                        return True
+                if oldRow == 2 or oldRow == 3 or oldRow == 4:
+                    if colDiff == -1 or colDiff == 1:
+                        return True
+            if rowDiff != 0:
                 if oldCol == 0 or oldCol == 6:
-                    if colDiff != 3 or colDiff != -3:
-                        return False
-            return True
+                    if rowDiff == -3 or rowDiff == 3:
+                        print("2")
+                        return True
+                if oldCol == 1 or oldCol == 5:
+                    if rowDiff == -2 or rowDiff == 2:
+                        return True
+                if oldCol == 2 or oldCol == 3 or oldCol == 4:
+                    if rowDiff == -1 or rowDiff == 1:
+                        return True
+            return False
 
 
     # Checks if the clicked position is:
