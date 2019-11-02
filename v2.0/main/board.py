@@ -109,14 +109,11 @@ class Board:
             newRow, newCol = self.getRelativePosition(newIndex)
             rowDiff = oldRow - newRow
             colDiff = oldCol - newCol
-            print(oldRow, newRow, rowDiff)
-            print(oldCol, newCol, colDiff)
             if not (rowDiff == 0) != (colDiff == 0):
                 return False
             if colDiff != 0:
                 if oldRow == 0 or oldRow == 6:
                     if colDiff == -3 or colDiff == 3:
-                        print("2")
                         return True
                 if oldRow == 1 or oldRow == 5:
                     if colDiff == -2 or colDiff == 2:
@@ -127,7 +124,6 @@ class Board:
             if rowDiff != 0:
                 if oldCol == 0 or oldCol == 6:
                     if rowDiff == -3 or rowDiff == 3:
-                        print("2")
                         return True
                 if oldCol == 1 or oldCol == 5:
                     if rowDiff == -2 or rowDiff == 2:
@@ -141,17 +137,35 @@ class Board:
     #
     # Returns nothing
     def takePiece(self, count, oppPlayer):
-        canRemove = self.calculateRemoveable(oppPlayer)
-        while count != 0 and canRemove:
+        #canRemove = self.calculateRemoveable(oppPlayer)
+        print("takePiece: ", count)
+        while count != 0:
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     valid, XYIndex, piece = self.getValid(event.pos)
                     if valid:
-                        row, col = self.getRelativePosition(XYIndex)
-                        if not ((row, col) in oppPlayer.oldMills):
-                            del self.piecesOnBoard[XYIndex]
-                            oppPlayer.numPieces -= 1
-                            count -= 1
+                        if piece != None:
+                            if piece.ownedBy == oppPlayer.number:
+                                row, col = self.getRelativePosition(XYIndex)
+                                if not self.inMill(row, col, oppPlayer):
+                                    del self.piecesOnBoard[XYIndex]
+                                    oppPlayer.numPieces -= 1
+                                    count -= 1
+
+    # Checks if a specific point on the board is in a mill.
+    #
+    # Returns true or false depending.
+    def inMill(self, row, col, player):
+        totalMills = self.checkForMill(player)
+        for mill in totalMills:
+            for piece in mill:
+                if row == piece.row and col == piece.col:
+                    return True
+        return False
+
 
     # Tests to make sure there is actually a piece that can
     # be removed from the board.
@@ -242,7 +256,7 @@ class Board:
     # Checks for mills on the board owned by 'player'. Refer to
     # NUM_POINTS for the logic of checking for a mill.
     # 
-    # Returns an integer that represents the count of new mills.
+    # Returns a list of all the pieces in mills.
     def checkForMill(self, player):
         rowMill = []
         colMill = []
@@ -316,9 +330,7 @@ class Board:
                             if len(colMill) == 3:
                                 totalMills.append(colMill)
                                 colMill = []
-        # Check how many mills are new
-        count = self.calculateNewMills(totalMills, player)
-        return count
+        return totalMills
 
 
 
