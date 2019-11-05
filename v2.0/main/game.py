@@ -7,8 +7,8 @@ class Game:
     PLAYER_ONE = 1
     PLAYER_TWO = 2
 
-    # Title
-    # SINGLE_TITLE = "Single Player Game"
+    # Game constant
+    MAX_PIECES = 18
 
     # Sprites
     BOARD_IMG = pygame.image.load("../assets/ninemensboard.png")
@@ -73,6 +73,6 @@ class Game:
                             self.turn.updatePhase
 
                         # Update game phase
-                        if self.board.numPieces == 18:
-                            self.playerOne.updatePhase(1)
-                            self.playerTwo.updatePhase(1)
+                        if self.board.numPieces == self.MAX_PIECES:
+                            self.playerOne.updatePhase(self.turn.MOVING_PHASE)
+                            self.playerTwo.updatePhase(self.turn.MOVING_PHASE)

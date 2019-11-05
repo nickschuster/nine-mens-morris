@@ -80,6 +80,7 @@ class Board:
                                 if validMove:
                                     self.piecesOnBoard[newIndex] = piece
                                     del self.piecesOnBoard[index]
+                                    print("PIECE", piece.ownedBy)
                                     self.updateBoard()
                                     return True
                                 else:
@@ -246,6 +247,9 @@ class Board:
     #
     # Returns a count of the mills as an int.
     def calculateNewMills(self, totalMills, player):
+        print(self.piecesOnBoard)
+        print(totalMills)
+        print(player.oldMills)
         count = 0
         for mill in totalMills:
             if mill not in player.oldMills:
@@ -258,6 +262,7 @@ class Board:
     # 
     # Returns a list of all the pieces in mills.
     def checkForMill(self, player):
+        print("Checkfor pices:",self.piecesOnBoard)
         rowMill = []
         colMill = []
         totalMills = []
@@ -278,6 +283,7 @@ class Board:
                                 # Are they on the same row
                                 if rowMill[0].row != rowMill[1].row:
                                     # Reset
+                                    print("row reset 0")
                                     rowMill = []
                                     rowMill.append(piece)
                                 # Are they on row 3 (4), refer to NUM_POINTS
@@ -285,6 +291,7 @@ class Board:
                                     # Check distance from each other
                                     if rowMill[0].col - rowMill[1].col != -1:
                                         # Reset
+                                        print("row reset 1")
                                         rowMill = []
                                         rowMill.append(piece)
                             # Three in a row
@@ -292,6 +299,7 @@ class Board:
                                 # Last two on same row
                                 if rowMill[1].row != rowMill[2].row:
                                     # Reset
+                                    print("row reset 2")
                                     rowMill = []
                                     rowMill.append(piece)
                                 # Are they on row 3 (4), refer to NUM_POINTS
@@ -299,10 +307,13 @@ class Board:
                                     # Check distance from each other
                                     if rowMill[1].col - rowMill[2].col != -1:
                                         # Reset
+                                        print("row reset 3")
                                         rowMill = []
                                         rowMill.append(piece)
                             # Valid 3 in a row/Mill found
+                            print("row: ",rowMill)
                             if len(rowMill) == 3:
+                                print("row mill")
                                 totalMills.append(rowMill)
                                 rowMill = []
                 # Refer to row logic
@@ -313,21 +324,27 @@ class Board:
                             colMill.append(piece)
                             if len(colMill) == 2:
                                 if colMill[0].col != colMill[1].col:
+                                    print("col reset 0")
                                     colMill = []
                                     colMill.append(piece)
                                 elif colMill[0].col == 3:
                                     if colMill[0].row - colMill[1].row != -1:
+                                        print("col reset 1")
                                         colMill = []
                                         colMill.append(piece)
                             if len(colMill) == 3:
                                 if colMill[1].col != colMill[2].col:
+                                    print("col reset 2")
                                     colMill = []
                                     colMill.append(piece)
                                 elif colMill[2].col == 3:
                                     if colMill[1].row - colMill[2].row != -1:
+                                        print("col reset 3")
                                         colMill = []
                                         colMill.append(piece)
+                            print("col:",colMill)
                             if len(colMill) == 3:
+                                print("col mill")
                                 totalMills.append(colMill)
                                 colMill = []
         return totalMills
