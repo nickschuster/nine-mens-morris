@@ -55,7 +55,7 @@ class Game:
                     if self.turn.phase == self.turn.PLACEMENT_PHASE:
                         validAction = self.board.placePiece(self.turn, event.pos)
 
-                    if self.turn.phase == self.turn.MOVING_PHASE:
+                    if self.turn.phase == self.turn.MOVING_PHASE or self.turn.phase == self.turn.ROVING_PHASE:
                         validAction = self.board.movePiece(self.turn, event.pos, self.display)
 
                     if validAction:
