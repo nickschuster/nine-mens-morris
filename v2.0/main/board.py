@@ -56,9 +56,8 @@ class Board:
             return True
         return False
 
-    # Moves a piece to a valid location on the board. 
-    # If the movement is the same as the same position
-    # as the original piece it exists.
+    # Trys to move a piece.
+    # Only succeeds if it's to a valid location on the board.
     #
     # Returns true or false depending on if a valid move occurred.
     # An inplace move is not considered valid.
@@ -78,8 +77,8 @@ class Board:
                             if newValid:
                                 validMove = self.validateMove(newIndex, index, player)
                                 if validMove:
-                                    self.piecesOnBoard[newIndex] = piece
                                     del self.piecesOnBoard[index]
+                                    self.newPiece(newIndex, player)
                                     print("PIECE", piece.ownedBy)
                                     self.updateBoard()
                                     return True
@@ -99,12 +98,12 @@ class Board:
     #
     # Returns true or false depending on move validity.
     def validateMove(self, newIndex, oldIndex, player):
-        if player.phase == player.ROVING_PHASE:
-            return True
-        elif newIndex == oldIndex:
+        if newIndex == oldIndex:
             return False
         elif self.piecesOnBoard.get(newIndex, None) != None:
             return False
+        elif player.phase == player.ROVING_PHASE:
+            return True
         else:
             oldRow, oldCol = self.getRelativePosition(oldIndex)
             newRow, newCol = self.getRelativePosition(newIndex)
