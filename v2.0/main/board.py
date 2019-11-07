@@ -14,7 +14,7 @@ class Board:
 
     # An index of a sublist XY_POINTS (XY_POINTS[6]) cooresponds to a number in NUM_POINTS 
     # which identifies the X and Y position of a piece on the board
-    # relative to other pieces on the board (6 in NUM_POINTS is [2, 2])
+    # relative to other pieces on the board (6 in NUM_POINTS is location NUM_POINTS[2][2])
     NUM_POINTS = [[0,-1,-1,1,-1,-1,2],
                   [-1,3,-1,4,-1,5,-1],
                   [-1,-1,6,7,8,-1,-1],

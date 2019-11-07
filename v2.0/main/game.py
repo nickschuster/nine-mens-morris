@@ -6,6 +6,8 @@ class Game:
     # Player identifiers
     PLAYER_ONE = 1
     PLAYER_TWO = 2
+    PLAYER_ONE_STRING = "WHITE"
+    PLAYER_TWO_STRING = "BLACK"
 
     # Game constant
     MAX_PIECES = 18
@@ -43,6 +45,13 @@ class Game:
         else:
             return self.playerOne
 
+    # Dtermines the congratulatory message
+    def getWin(self, player):
+        if player.number == self.PLAYER_ONE:
+            return self.PLAYER_ONE_STRING
+        else:
+            return self.PLAYER_TWO_STRING
+
     # Main game loop.
     def runGame(self):
         while True:
@@ -61,12 +70,17 @@ class Game:
                     if validAction:
                         self.board.updateBoard()
                         totalMills = self.board.checkForMill(self.turn)
-                        print(len(totalMills))
                         count = self.board.calculateNewMills(totalMills, self.turn)
-                        print(count)
                         self.board.takePiece(count, self.notTurn())
                         self.board.updateBoard()
                         self.changeTurn()
+                        self.turn.checkWin()
+
+                        # Check if the game is over
+                        if self.turn.lost == True:
+                            winner = self.notTurn()
+                            winString = self.getWin(winner)
+                            return winString
 
                         # Update player phase
                         if self.turn.phase == self.turn.MOVING_PHASE:

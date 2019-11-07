@@ -37,10 +37,14 @@ TITLE = 'Nine Men\'s Morris'
 BY = 'By'
 NAME = 'Nikolas Schuster'
 
-# For default look
+# Won strings
+WHITE_WIN ="WHITE WINS"
+BLACK_WIN = "BLACK WINS"
+
+# For the default look. The board image.
 BOARD_IMG = pygame.image.load("../assets/ninemensboard.png")
 
-# Colours
+# Colors
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (190,45,45)
@@ -191,6 +195,11 @@ def menu(display, clock):
     if single:
         newGame(display, clock)
 
+def displayWin(win):
+    winText = MEDIUM_TEXT.render(win+" WINS", True, WHITE) 
+    winTextRect = winText.get_rect() 
+    winTextRect.center = (WINDOW_HEIGHT/2, WINDOW_HEIGHT/2)
+    display.blit(winText, winTextRect)
 
 # Starts a new game of nine mens morris and
 # passes the display to the Game to display on
@@ -200,7 +209,11 @@ def newGame(display, clock):
     # Hide menu on game start
     display = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
     game = Game(display, clock)
-    game.start()
+    win = game.start()
+    displayWin(win)
+
+    # Reset window when game done.
+    display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 # Starts program execution
 if __name__ == "__main__":
