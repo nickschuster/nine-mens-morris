@@ -1,5 +1,6 @@
 import pygame; pygame.init()
 from game import Game
+import time
 
 # Dimensions
 WINDOW_WIDTH = 1050
@@ -52,7 +53,8 @@ LIGHT_RED = (255,0,0)
 
 # Font options
 FONT = 'Monsterrat-Regular'
-LARGE_TEXT = pygame.font.SysFont(FONT, 45) 
+HUGE_TEXT = pygame.font.SysFont(FONT, 72)
+LARGE_TEXT = pygame.font.SysFont(FONT, 45)
 MEDIUM_TEXT = pygame.font.SysFont(FONT, 35) 
 SMALL_TEXT = pygame.font.SysFont(FONT, 25) 
 
@@ -156,8 +158,8 @@ def buttonHandeling(display, click=False):
 #
 # Returns nothing.
 def menu(display, clock):
-    intro = True
-    while intro:
+    single = False
+    while True:
         # Test for user action
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -166,15 +168,14 @@ def menu(display, clock):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 buttonClicked = buttonHandeling(display, True)
                 if buttonClicked == BUTTON_SINGLE:
-                    intro = False
                     single = True
-                    break
                 elif buttonClicked == BUTTON_LOCAL:
                     #TODO
                     local = True
                 elif buttonClicked == BUTTON_MULTI:
                     #TODO
                     multi = True
+                    displayWin("WHITE", display)
                 elif buttonClicked == BUTTON_QUIT:
                     pygame.quit()
                     quit()
@@ -191,15 +192,20 @@ def menu(display, clock):
         pygame.display.update()
         clock.tick(30)
 
-    #buttonHandeling(display)
-    if single:
-        newGame(display, clock)
+        # Start a game if the button has been pressed
+        if single:
+            newGame(display, clock)
+            single = False
 
-def displayWin(win):
-    winText = MEDIUM_TEXT.render(win+" WINS", True, WHITE) 
+def displayWin(win, display):
+    winBox = pygame.Rect(175,290,415,150)
+    pygame.draw.rect(display, WHITE, winBox)
+    winText = HUGE_TEXT.render(win+" WINS", True, BLACK) 
     winTextRect = winText.get_rect() 
     winTextRect.center = (WINDOW_HEIGHT/2, WINDOW_HEIGHT/2)
     display.blit(winText, winTextRect)
+    pygame.display.update()
+    time.sleep(3)
 
 # Starts a new game of nine mens morris and
 # passes the display to the Game to display on
@@ -210,7 +216,7 @@ def newGame(display, clock):
     display = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
     game = Game(display, clock)
     win = game.start()
-    displayWin(win)
+    displayWin(win, display)
 
     # Reset window when game done.
     display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))

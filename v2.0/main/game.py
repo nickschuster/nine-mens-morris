@@ -28,7 +28,8 @@ class Game:
     # Starts game execution.
     def start(self):
         self.board.create()
-        self.runGame()
+        win = self.runGame()
+        return win
 
     # Changes the game turn.
     def changeTurn(self):
