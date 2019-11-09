@@ -16,6 +16,10 @@ TITLE_X = 900
 TITLE_Y = 100
 TITLE_BY_Y = 150
 TITLE_NAME_Y = 200
+WIN_X = 192
+WIN_Y = 325
+WIN_WIDTH = 370
+WIN_HIEGHT = 92
 
 # Indexs for readability
 X = 0
@@ -175,7 +179,6 @@ def menu(display, clock):
                 elif buttonClicked == BUTTON_MULTI:
                     #TODO
                     multi = True
-                    displayWin("WHITE", display)
                 elif buttonClicked == BUTTON_QUIT:
                     pygame.quit()
                     quit()
@@ -198,7 +201,7 @@ def menu(display, clock):
             single = False
 
 def displayWin(win, display):
-    winBox = pygame.Rect(175,290,415,150)
+    winBox = pygame.Rect(WIN_X,WIN_Y,WIN_WIDTH,WIN_HIEGHT)
     pygame.draw.rect(display, WHITE, winBox)
     winText = HUGE_TEXT.render(win+" WINS", True, BLACK) 
     winTextRect = winText.get_rect() 
