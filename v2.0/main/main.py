@@ -179,6 +179,7 @@ def menu(display, clock):
                 elif buttonClicked == BUTTON_MULTI:
                     #TODO
                     multi = True
+                    
                 elif buttonClicked == BUTTON_QUIT:
                     pygame.quit()
                     quit()

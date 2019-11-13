@@ -77,17 +77,18 @@ class Game:
                         self.changeTurn()
                         self.turn.checkWin()
 
-                        # Check if the game is over
-                        if self.turn.lost == True:
-                            winner = self.notTurn()
-                            winString = self.getWin(winner)
-                            return winString
-
-                        # Update player phase
-                        if self.turn.phase == self.turn.MOVING_PHASE:
-                            self.turn.updatePhase
-
                         # Update game phase
                         if self.board.numPieces == self.MAX_PIECES:
                             self.playerOne.updatePhase(self.turn.MOVING_PHASE)
                             self.playerTwo.updatePhase(self.turn.MOVING_PHASE)
+
+                        # Update player phase and check if a valid move exists
+                        if self.turn.phase == self.turn.MOVING_PHASE:
+                            self.turn.lost = not self.board.canMove(self.turn)
+                            self.turn.updatePhase()
+
+                        # Check if the game is over.
+                        if self.turn.lost == True:
+                            winner = self.notTurn()
+                            winString = self.getWin(winner)
+                            return winString

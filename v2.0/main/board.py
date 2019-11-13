@@ -44,6 +44,21 @@ class Board:
         self.display.blit(self.boardImg, (0,0))
         pygame.display.flip()
 
+    # Determines if a valid move exists.
+    #
+    # Returns true or false depending.
+    def canMove(self, player):
+        for index in self.piecesOnBoard:
+            piece = self.piecesOnBoard[index]
+            if piece != None:
+                if piece.ownedBy == player.number:
+                    for newIndex in range(len(self.XY_POINTS)):
+                        if self.validateMove(newIndex, index, player):
+                            print(index, newIndex, player.number)
+                            return True
+        return False
+
+
     # In phase one place a piece on the board.
     #
     # Returns true or false depending on if a piece was placed.
