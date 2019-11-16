@@ -54,7 +54,6 @@ class Board:
                 if piece.ownedBy == player.number:
                     for newIndex in range(len(self.XY_POINTS)):
                         if self.validateMove(newIndex, index, player):
-                            print(index, newIndex, player.number)
                             return True
         return False
 
@@ -107,6 +106,7 @@ class Board:
                                                         mouseY-self.PIECE_HITBOX))
                             pygame.display.flip()
                             break
+        return False
 
     # Validates a movement of a piece from a specific
     # player against an oldIndex and a newIndex of a piece.

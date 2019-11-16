@@ -1,8 +1,14 @@
 import pygame
 from board import Board
 from player import Player
+from agent import Agent
 
 class Game:
+    # Game type identifiers
+    LOCAL_MULTI = "localMulti"
+    SINGLE = "single"
+    MULTI = "multi"
+
     # Player identifiers
     PLAYER_ONE = 1
     PLAYER_TWO = 2
@@ -17,13 +23,23 @@ class Game:
     PLAYER_ONE_IMG = pygame.image.load("../assets/whitepiece.png")
     PLAYER_TWO_IMG = pygame.image.load("../assets/blackpiece.png")
 
-    def __init__(self, display, clock):
+    def __init__(self, display, clock, gameType):
         self.display = display
         self.board = Board(display, self.BOARD_IMG)
         self.playerOne = Player(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
-        self.playerTwo = Player(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
+
+        # Determine what type of game it is going to be and
+        # create the second player accordingly
+        if gameType == self.LOCAL_MULTI:
+            self.playerTwo = Player(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
+        elif gameType == self.SINGLE:
+            self.playerTwo = Agent(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
+        elif gameType == self.MULTI:
+            self.playerTwo = None
+
         self.turn = self.playerOne
         self.clock = clock
+        self.gameType = gameType;
 
     # Starts game execution.
     def start(self):
@@ -66,6 +82,17 @@ class Game:
                         validAction = self.board.placePiece(self.turn, event.pos)
 
                     if self.turn.phase == self.turn.MOVING_PHASE or self.turn.phase == self.turn.ROVING_PHASE:
+                        # pickUp = event.pos
+                        # putDown = None
+                        # if pickUp == None:
+                        #     pickUp = event.pos
+                        #     putDown = None
+                        # if putDown == None:
+                        #     putDown = event.pos 
+                        #     pickUp = None
+                        # if pickUp != None and putDown != None:    
+                        #     validAction = self.board.movePiece(self.turn, event.pos, self.display)
+
                         validAction = self.board.movePiece(self.turn, event.pos, self.display)
 
                     if validAction:
@@ -92,3 +119,22 @@ class Game:
                             winner = self.notTurn()
                             winString = self.getWin(winner)
                             return winString
+
+                # Specific game type actions.
+                if self.gameType == self.SINGLE:
+                    if self.turn == self.playerTwo:
+                        randomMoves = self.playerTwo.getAction()
+                        pygame.event.clear()
+                        if len(randomMoves) > 1:
+                            if self.board.validateMove(randomMoves[1], randomMoves[0], self.turn):
+                                pickUp = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMoves[0]])
+                                putDown = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMoves[1]])
+                                pygame.event.post(pickUp)
+                                pygame.event.post(putDown)
+                        else:
+                            action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMoves[0]])
+                            pygame.event.post(action)
+                        # In case the moves were invalid. So the event loop is run again.
+                        pygame.event.post(pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=(0,0)))
+
+

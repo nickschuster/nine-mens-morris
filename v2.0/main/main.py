@@ -62,6 +62,11 @@ LARGE_TEXT = pygame.font.SysFont(FONT, 45)
 MEDIUM_TEXT = pygame.font.SysFont(FONT, 35) 
 SMALL_TEXT = pygame.font.SysFont(FONT, 25) 
 
+# Game type identifiers
+LOCAL_MULTI = "localMulti"
+SINGLE = "single"
+MULTI = "multi"
+
 # Sets up the window
 def setup():
     pygame.display.set_caption('Nine Men\'s Morris')
@@ -163,6 +168,8 @@ def buttonHandeling(display, click=False):
 # Returns nothing.
 def menu(display, clock):
     single = False
+    local = False
+    multi = False
     while True:
         # Test for user action
         for event in pygame.event.get():
@@ -172,9 +179,9 @@ def menu(display, clock):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 buttonClicked = buttonHandeling(display, True)
                 if buttonClicked == BUTTON_SINGLE:
+                    # TODO
                     single = True
                 elif buttonClicked == BUTTON_LOCAL:
-                    #TODO
                     local = True
                 elif buttonClicked == BUTTON_MULTI:
                     #TODO
@@ -197,10 +204,16 @@ def menu(display, clock):
         clock.tick(30)
 
         # Start a game if the button has been pressed
-        if single:
-            newGame(display, clock)
+        if local:
+            newLocalMultiGame(display, clock)
+            local = False
+        elif single:
+            newSingleGame(display, clock)
             single = False
 
+# Displays the winner of a game for 3 seconds.
+#
+# Returns nothing.
 def displayWin(win, display):
     winBox = pygame.Rect(WIN_X,WIN_Y,WIN_WIDTH,WIN_HIEGHT)
     pygame.draw.rect(display, WHITE, winBox)
@@ -211,18 +224,28 @@ def displayWin(win, display):
     pygame.display.update()
     time.sleep(3)
 
-# Starts a new game of nine mens morris and
-# passes the display to the Game to display on
+# Starts a new local multiplayer game of nine mens morris and
+# passes the display to the Game to display on.
 #
-# Returns nothing
-def newGame(display, clock):
+# Returns nothing.
+def newLocalMultiGame(display, clock):
     # Hide menu on game start
     display = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
-    game = Game(display, clock)
+    game = Game(display, clock, LOCAL_MULTI)
     win = game.start()
     displayWin(win, display)
 
-    # Reset window when game done.
+    # Reset window when game is done.
+    display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+def newSingleGame(display, clock):
+    # Hide menu on game start
+    display = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
+    game = Game(display, clock, SINGLE)
+    win = game.start()
+    displayWin(win, display)
+
+    # Reset window when game is done.
     display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 # Starts program execution
