@@ -2,6 +2,7 @@ import pygame;
 from piece import Piece
 
 class Board:
+
     # Coordinates for visual placement
     XY_POINTS = [[54,52],[375,52],[697,52],
                  [160,160],[375,160],[590,160],
@@ -101,12 +102,10 @@ class Board:
                                     return False
                         if hasattr(player, 'isAgent'):
                             print("moveing")
-                            randomMove = player.getAction()
+                            randomMove = player.getAction(player.PUTDOWN)
                             pygame.event.clear()
                             action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])
                             pygame.event.post(action)
-                            # In case the moves were invalid. So the event loop is run again.
-                            # pygame.event.post(pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=(0,0)))
                         elif event.type == pygame.MOUSEMOTION:
                             self.updateBoard(index)
                             mouseX, mouseY = event.pos
@@ -159,7 +158,7 @@ class Board:
     # Takes pieces from the board that are not in a mill.
     #
     # Returns nothing
-    def takePiece(self, count, oppPlayer):
+    def takePiece(self, count, oppPlayer, player):
         #canRemove = self.calculateRemoveable(oppPlayer)      
         while count != 0:
             for event in pygame.event.get():
@@ -176,6 +175,12 @@ class Board:
                                     del self.piecesOnBoard[XYIndex]
                                     oppPlayer.numPieces -= 1
                                     count -= 1
+                if hasattr(player, 'isAgent'):
+                    print("taking")
+                    randomMove = player.getAction(player.TAKE)
+                    pygame.event.clear()
+                    action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])
+                    pygame.event.post(action)
 
     # Checks if a specific point on the board is in a mill.
     #

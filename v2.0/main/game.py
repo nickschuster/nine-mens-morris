@@ -33,6 +33,8 @@ class Game:
         if gameType == self.LOCAL_MULTI:
             self.playerTwo = Player(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
         elif gameType == self.SINGLE:
+            # Loop to ensure getAction is checked often
+            pygame.time.set_timer(pygame.USEREVENT, 100)
             self.playerTwo = Agent(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
         elif gameType == self.MULTI:
             self.playerTwo = None
@@ -88,7 +90,7 @@ class Game:
                         self.board.updateBoard()
                         totalMills = self.board.checkForMill(self.turn)
                         count = self.board.calculateNewMills(totalMills, self.turn)
-                        self.board.takePiece(count, self.notTurn())
+                        self.board.takePiece(count, self.notTurn(), self.turn)
                         self.board.updateBoard()
                         self.changeTurn()
                         self.turn.checkWin()
@@ -113,11 +115,9 @@ class Game:
                 if self.gameType == self.SINGLE:
                     if self.turn == self.playerTwo:
                         print("here")
-                        randomMove = self.playerTwo.getAction()
+                        randomMove = self.playerTwo.getAction(self.turn.PLACE_PICKUP)
                         pygame.event.clear()
                         action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMove])
                         pygame.event.post(action)
-                        # In case the moves were invalid. So the event loop is run again.
-                        pygame.event.post(pygame.event.Event(pygame.USEREVENT))
 
 
