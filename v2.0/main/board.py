@@ -87,7 +87,7 @@ class Board:
                             pygame.quit()
                             quit()
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            newValid, newIndex, newPiece = self.getValid((mouseX, mouseY))
+                            newValid, newIndex, newPiece = self.getValid(event.pos)
                             if newValid:
                                 validMove = self.validateMove(newIndex, index, player)
                                 if validMove:
@@ -99,7 +99,15 @@ class Board:
                                 else:
                                     self.updateBoard()
                                     return False
-                        if event.type == pygame.MOUSEMOTION:
+                        if hasattr(player, 'isAgent'):
+                            print("moveing")
+                            randomMove = player.getAction()
+                            pygame.event.clear()
+                            action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])
+                            pygame.event.post(action)
+                            # In case the moves were invalid. So the event loop is run again.
+                            # pygame.event.post(pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=(0,0)))
+                        elif event.type == pygame.MOUSEMOTION:
                             self.updateBoard(index)
                             mouseX, mouseY = event.pos
                             display.blit(piece.sprite, (mouseX-self.PIECE_HITBOX, 

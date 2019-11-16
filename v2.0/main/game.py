@@ -82,17 +82,6 @@ class Game:
                         validAction = self.board.placePiece(self.turn, event.pos)
 
                     if self.turn.phase == self.turn.MOVING_PHASE or self.turn.phase == self.turn.ROVING_PHASE:
-                        # pickUp = event.pos
-                        # putDown = None
-                        # if pickUp == None:
-                        #     pickUp = event.pos
-                        #     putDown = None
-                        # if putDown == None:
-                        #     putDown = event.pos 
-                        #     pickUp = None
-                        # if pickUp != None and putDown != None:    
-                        #     validAction = self.board.movePiece(self.turn, event.pos, self.display)
-
                         validAction = self.board.movePiece(self.turn, event.pos, self.display)
 
                     if validAction:
@@ -123,18 +112,12 @@ class Game:
                 # Specific game type actions.
                 if self.gameType == self.SINGLE:
                     if self.turn == self.playerTwo:
-                        randomMoves = self.playerTwo.getAction()
+                        print("here")
+                        randomMove = self.playerTwo.getAction()
                         pygame.event.clear()
-                        if len(randomMoves) > 1:
-                            if self.board.validateMove(randomMoves[1], randomMoves[0], self.turn):
-                                pickUp = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMoves[0]])
-                                putDown = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMoves[1]])
-                                pygame.event.post(pickUp)
-                                pygame.event.post(putDown)
-                        else:
-                            action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMoves[0]])
-                            pygame.event.post(action)
+                        action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMove])
+                        pygame.event.post(action)
                         # In case the moves were invalid. So the event loop is run again.
-                        pygame.event.post(pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=(0,0)))
+                        pygame.event.post(pygame.event.Event(pygame.USEREVENT))
 
 

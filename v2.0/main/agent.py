@@ -13,14 +13,8 @@ class Agent(Player):
 
     def __init__(self, number, sprite):
         super().__init__(number, sprite)
+        self.isAgent = True
 
     def getAction(self):
-        moves = []
-        if self.phase == self.PLACEMENT_PHASE:
-            moves.append(random.randint(0,23))
-        elif self.phase == self.MOVING_PHASE:
-            moves.append(random.randint(0,23))
-            moves.append(random.randint(0,23))
-
-        print(moves)
-        return moves
+        action = random.randint(0,23)
+        return action
