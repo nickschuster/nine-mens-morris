@@ -35,7 +35,7 @@ class Game:
         elif gameType == self.SINGLE:
             # Loop to ensure getAction is checked often
             pygame.time.set_timer(pygame.USEREVENT, 100)
-            self.playerTwo = Agent(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
+            self.playerTwo = Agent(self.PLAYER_TWO, self.PLAYER_TWO_IMG, self.board.piecesOnBoard)
         elif gameType == self.MULTI:
             self.playerTwo = None
 

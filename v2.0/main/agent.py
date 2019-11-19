@@ -19,10 +19,11 @@ class Agent(Player):
                         22,23]
 
     # Constructor
-    def __init__(self, number, sprite):
+    def __init__(self, number, sprite, board):
         super().__init__(number, sprite)
         self.isAgent = True
         self.context = self.PLACE
+        self.currentBoard = board
 
     def updateContext(self, context):
         if context == self.PLACE_PICKUP:
@@ -35,6 +36,7 @@ class Agent(Player):
 
     # Gets the position on the board the agent wants to click
     def getAction(self, context):
+        print(self.currentBoard)
         self.updateContext(context)
         action = random.randint(0,23)
         return action
