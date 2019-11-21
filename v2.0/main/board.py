@@ -159,8 +159,9 @@ class Board:
     #
     # Returns nothing
     def takePiece(self, count, oppPlayer, player):
-        #canRemove = self.calculateRemoveable(oppPlayer)      
-        while count != 0:
+        canRemove = self.calculateRemoveable(oppPlayer)    
+        print(canRemove)  
+        while count != 0 and canRemove:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -198,12 +199,21 @@ class Board:
     # be removed from the board.
     #
     # Returns true or false depending.
-    def calculateRemoveable(self, oppPlayer):
+    def calculateRemoveable(self, player):
+        canRemove = False
+        mills = self.checkForMill(player)
         for pieceIndex in self.piecesOnBoard:
             piece = self.piecesOnBoard[pieceIndex]
-            if piece not in oppPlayer.oldMills:
-                return True
-        return False
+            if piece.ownedBy == player.number:
+                if len(mills) == 0: 
+                    canRemove = True
+                for mill in mills:
+                    for millPiece in mill:
+                        if piece != millPiece:
+                            canRemove = True
+                        else:
+                            canRemove = False
+        return canRemove
 
     # Checks if the clicked position is:
     # valid, has an index, has a piece at its index

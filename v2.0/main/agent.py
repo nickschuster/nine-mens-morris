@@ -25,6 +25,10 @@ class Agent(Player):
         self.context = self.PLACE
         self.currentBoard = board
 
+    # Updates the context of the agent. Effects calls
+    # to getAction.
+    #
+    # Returns nothing.
     def updateContext(self, context):
         if context == self.PLACE_PICKUP:
             if self.phase == self.MOVING_PHASE:
@@ -34,9 +38,10 @@ class Agent(Player):
         else:
             self.context = self.context
 
-    # Gets the position on the board the agent wants to click
+    # Gets the position on the board the agent wants to click.
+    # 
+    # Returns an index representing that position.
     def getAction(self, context):
-        print(self.currentBoard)
         self.updateContext(context)
         action = random.randint(0,23)
         return action
