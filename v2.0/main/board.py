@@ -100,8 +100,8 @@ class Board:
                                 else:
                                     self.updateBoard()
                                     return False
+                        # If its a single player game
                         if hasattr(player, 'isAgent'):
-                            print("moveing")
                             randomMove = player.getAction(player.PUTDOWN)
                             pygame.event.clear()
                             action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])
@@ -176,8 +176,8 @@ class Board:
                                     del self.piecesOnBoard[XYIndex]
                                     oppPlayer.numPieces -= 1
                                     count -= 1
+                # If its a single player game
                 if hasattr(player, 'isAgent'):
-                    print("taking")
                     randomMove = player.getAction(player.TAKE)
                     pygame.event.clear()
                     action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])

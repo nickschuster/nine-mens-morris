@@ -38,6 +38,7 @@ class Game:
             self.playerTwo = Agent(self.PLAYER_TWO, self.PLAYER_TWO_IMG, self.board.piecesOnBoard)
         elif gameType == self.MULTI:
             self.playerTwo = None
+            self.playerOne = None
 
         self.turn = self.playerOne
         self.clock = clock
@@ -114,7 +115,6 @@ class Game:
                 # Specific game type actions.
                 if self.gameType == self.SINGLE:
                     if self.turn == self.playerTwo:
-                        print("here")
                         randomMove = self.playerTwo.getAction(self.turn.PLACE_PICKUP)
                         pygame.event.clear()
                         action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMove])
