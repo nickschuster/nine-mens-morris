@@ -76,7 +76,7 @@ class Board:
     #
     # Returns true or false depending on if a valid move occurred.
     # An inplace move is not considered valid.
-    def movePiece(self, player, clickPos, display):
+    def movePiece(self, player, clickPos, display, oppPlayer):
         valid, index, piece = self.getValid(clickPos)
         if valid and piece != None:
             if piece.ownedBy == player.number:
@@ -176,6 +176,7 @@ class Board:
                                     del self.piecesOnBoard[XYIndex]
                                     oppPlayer.numPieces -= 1
                                     count -= 1
+                                    self.updateBoard()
                 # If its a single player game
                 if hasattr(player, 'isAgent'):
                     randomMove = player.getAction(player.TAKE)

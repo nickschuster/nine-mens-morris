@@ -1,6 +1,7 @@
 import pygame; pygame.init()
 from game import Game
 import time
+import networkmanager
 
 # Dimensions
 WINDOW_WIDTH = 1050
@@ -238,6 +239,10 @@ def newLocalMultiGame(display, clock):
     # Reset window when game is done.
     display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
+# Starts a new single player game of nine mens morris. Passes
+# the game display and the game clock to the Game.
+#
+# Returns nothing.
 def newSingleGame(display, clock):
     # Hide menu on game start
     display = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
@@ -247,6 +252,25 @@ def newSingleGame(display, clock):
 
     # Reset window when game is done.
     display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+# Starts a new multiplayer game of nine mens morris.
+#
+# Returns nothing.
+def newMultiGame(display, clock):
+    # Try to connect to server and an opponent.
+    if networkmanager.setUpConnection():
+        # Hide menu on game start
+        display = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
+        game = Game(display, clock, MUTLI)
+        win = game.start()
+        displayWin(win, display)
+
+        # Reset window when game is done.
+        display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    else:
+        # Display an error about not being able to connect
+        # TODO
+        return None
 
 # Starts program execution
 if __name__ == "__main__":

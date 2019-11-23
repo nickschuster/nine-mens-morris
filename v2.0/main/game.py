@@ -1,4 +1,6 @@
 import pygame
+import networkmanager
+from networkmanager import OnlinePlayer
 from board import Board
 from player import Player
 from agent import Agent
@@ -26,23 +28,23 @@ class Game:
     def __init__(self, display, clock, gameType):
         self.display = display
         self.board = Board(display, self.BOARD_IMG)
-        self.playerOne = Player(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
 
-        # Determine what type of game it is going to be and
-        # create the second player accordingly
+        # Determine what type of game it is going to be
         if gameType == self.LOCAL_MULTI:
             self.playerTwo = Player(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
+            self.playerOne = Player(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
         elif gameType == self.SINGLE:
             # Loop to ensure getAction is checked often
             pygame.time.set_timer(pygame.USEREVENT, 100)
             self.playerTwo = Agent(self.PLAYER_TWO, self.PLAYER_TWO_IMG, self.board.piecesOnBoard)
+            self.playerOne = Player(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
         elif gameType == self.MULTI:
-            self.playerTwo = None
-            self.playerOne = None
+            self.playerTwo = networkmanager.getPlayerTwo()
+            self.playerOne = networkmanager.getPlayerOne()
 
         self.turn = self.playerOne
         self.clock = clock
-        self.gameType = gameType;
+        self.gameType = gameType
 
     # Starts game execution.
     def start(self):
@@ -85,7 +87,7 @@ class Game:
                         validAction = self.board.placePiece(self.turn, event.pos)
 
                     if self.turn.phase == self.turn.MOVING_PHASE or self.turn.phase == self.turn.ROVING_PHASE:
-                        validAction = self.board.movePiece(self.turn, event.pos, self.display)
+                        validAction = self.board.movePiece(self.turn, event.pos, self.display, self.notTurn())
 
                     if validAction:
                         self.board.updateBoard()
@@ -95,6 +97,11 @@ class Game:
                         self.board.updateBoard()
                         self.changeTurn()
                         self.turn.checkWin()
+
+                        # If its an online game send the previous move.
+                        if self.gameType == self.MULTI:
+                            if hasattr(self.turn, 'isOnline'):
+                                self.turn.sendMove(event.pos)
 
                         # Update game phase
                         if self.board.numPieces == self.MAX_PIECES:
@@ -119,5 +126,14 @@ class Game:
                         pygame.event.clear()
                         action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMove])
                         pygame.event.post(action)
+                elif self.gameType == self.MULTI:
+                    if hasattr(self.turn, 'isOnline'):
+
+                        # Returns an x/y coord
+                        move = self.turn.getAction()
+                        # pygame.event.clear()
+                        # action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMove])
+                        # pygame.event.post(action)
+
 
 
