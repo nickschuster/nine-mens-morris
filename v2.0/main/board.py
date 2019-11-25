@@ -96,16 +96,21 @@ class Board:
                                     self.newPiece(newIndex, player)
                                     
                                     self.updateBoard()
+                                    if hasattr(oppPlayer, 'isOnline'):
+                                        oppPlayer.sendMove(event.pos)
                                     return True
                                 else:
                                     self.updateBoard()
                                     return False
                         # If its a single player game
                         if hasattr(player, 'isAgent'):
-                            randomMove = player.getAction(player.PUTDOWN)
+                            move = player.getAction(player.PUTDOWN)
                             pygame.event.clear()
                             action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])
                             pygame.event.post(action)
+                        elif hasattr(player, 'isOnline'):
+                            move = player.getAction()
+                            #TODO
                         elif event.type == pygame.MOUSEMOTION:
                             self.updateBoard(index)
                             mouseX, mouseY = event.pos
@@ -177,12 +182,17 @@ class Board:
                                     oppPlayer.numPieces -= 1
                                     count -= 1
                                     self.updateBoard()
+                                    if hasattr(oppPlayer, 'isOnline'):
+                                        oppPlayer.sendMove(event.pos)
                 # If its a single player game
                 if hasattr(player, 'isAgent'):
-                    randomMove = player.getAction(player.TAKE)
+                    move = player.getAction(player.TAKE)
                     pygame.event.clear()
                     action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])
                     pygame.event.post(action)
+                elif hasatter(player, 'isOnline'):
+                    move = player.getAction()
+                    # TODO
 
     # Checks if a specific point on the board is in a mill.
     #
