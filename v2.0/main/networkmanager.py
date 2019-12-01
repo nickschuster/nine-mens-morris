@@ -3,8 +3,11 @@ import threading
 import pygame
 from player import Player
 
+# Globals
 PLAYER_TYPE = None
 HOST = None
+
+# Constants
 SERVER = '192.168.0.64'
 PORT = 12345
 
@@ -15,6 +18,7 @@ PORT = 12345
 def setUpConnection():
 	global PLAYER_TYPE
 	global HOST
+	global CONNECTION
 	# Determine what
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect((HOST, PORT))
@@ -27,8 +31,8 @@ def setUpConnection():
 		sock.close()
 
 		# Connect to the host
-		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		sock.connect((HOST, PORT))
+		CONNECTION = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		CONNECTION.connect((HOST, PORT))
 	else:
 		# Close the server connection
 		sock.close()
@@ -39,7 +43,7 @@ def setUpConnection():
 		sock.bind((HOST, PORT))
 		sock.listen(1)
 		print("Connection: ", sock.getsockname())
-		sc, sockname = sock.accept()
+		CONNECTION, sockname = sock.accept()
 		print("Client: ", sockname)
 	return False
 
@@ -47,29 +51,28 @@ def getPlayerOne():
 	if PLAYER_TYPE == "H":
 		return Player()
 	else:
-		return OnlinePlayer()
+		return OnlinePlayer(CONNECTION)
 
 def getPlayerTwo():
 	if PLAYER_TYPE == "H":
-		return OnlinePlayer()
+		return OnlinePlayer(CONNECTION)
 	else:
 		return Player()
 
 class OnlinePlayer(Player):
 	# Constructor
-	def __init__(self, writer, reader):
+	def __init__(self, connection):
 		self.isOnline = True
-		self.writer = writer
-		self.reader = reader
+		self.connection = connection
 
 	# Gets the opponents move from the network.
 	#
 	# Returns an X/Y coord of that move (click position).
-	def getAction():
+	def getAction(self, pos):
 		return 10
 
 	# Sends the local player's move to the opponent.
 	#
 	# Returns nothing.
-	def sendMove():
+	def sendMove(event, pos):
 		return None
