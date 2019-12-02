@@ -180,7 +180,6 @@ def menu(display, clock):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 buttonClicked = buttonHandeling(display, True)
                 if buttonClicked == BUTTON_SINGLE:
-                    # TODO
                     single = True
                 elif buttonClicked == BUTTON_LOCAL:
                     local = True
@@ -211,6 +210,9 @@ def menu(display, clock):
         elif single:
             newSingleGame(display, clock)
             single = False
+        elif multi:
+            newMultiGame(display, clock)
+            multi = False
 
 # Displays the winner of a game for 3 seconds.
 #
