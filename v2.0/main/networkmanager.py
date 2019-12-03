@@ -8,7 +8,7 @@ PLAYER_TYPE = None
 HOST = None
 
 # Constants
-SERVER = '192.168.0.64'
+SERVER = '192.168.0.8'
 PORT = 12345
 
 # Connects to server. Connects to opponent. Decides who goes first. 
