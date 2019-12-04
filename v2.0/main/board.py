@@ -106,7 +106,7 @@ class Board:
                         if hasattr(player, 'isAgent'):
                             move = player.getAction(player.PUTDOWN)
                             pygame.event.clear()
-                            action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])
+                            action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[move])
                             pygame.event.post(action)
                         elif hasattr(player, 'isOnline'):
                             move = player.getAction()
@@ -188,9 +188,9 @@ class Board:
                 if hasattr(player, 'isAgent'):
                     move = player.getAction(player.TAKE)
                     pygame.event.clear()
-                    action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[randomMove])
+                    action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[move])
                     pygame.event.post(action)
-                elif hasatter(player, 'isOnline'):
+                elif hasattr(player, 'isOnline'):
                     move = player.getAction()
                     # TODO
 

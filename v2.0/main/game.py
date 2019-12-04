@@ -124,7 +124,7 @@ class Game:
                     if self.turn == self.playerTwo:
                         move = self.playerTwo.getAction(self.turn.PLACE_PICKUP)
                         pygame.event.clear()
-                        action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMove])
+                        action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[move])
                         pygame.event.post(action)
                 elif self.gameType == self.MULTI:
                     if hasattr(self.turn, 'isOnline'):
