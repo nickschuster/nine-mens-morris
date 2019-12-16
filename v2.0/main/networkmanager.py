@@ -1,6 +1,7 @@
 import socket
 import threading
 import pygame
+import struct
 from player import Player
 
 # Globals
@@ -29,7 +30,12 @@ def setUpConnection():
 		print(PLAYER_TYPE)
 		if PLAYER_TYPE == "C":
 			# Host IP address
-			HOST = sock.recv(4)
+			hostParts = []
+			hostParts.append(struct.unpack('!B', sock.recv(1))[0])
+			hostParts.append(struct.unpack('!B', sock.recv(1))[0])
+			hostParts.append(struct.unpack('!B', sock.recv(1))[0])
+			hostParts.append(struct.unpack('!B', sock.recv(1))[0])
+			HOST = '.'.join(map(str, hostParts))
 			# Close the server connection
 			sock.close()
 			print("CLIENT HOST", HOST)
