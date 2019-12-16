@@ -32,6 +32,7 @@ def setUpConnection():
 			HOST = sock.recv(4)
 			# Close the server connection
 			sock.close()
+			print("CLIENT HOST", HOST)
 
 			# Connect to the host
 			CONNECTION = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,7 +42,7 @@ def setUpConnection():
 			sock.close()
 
 			# Wait for a client connection
-			HOST = socket.gethostbyname(socket.gethostname())
+			HOST = ''
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 			sock.bind((HOST, PORT))
