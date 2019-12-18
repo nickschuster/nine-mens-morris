@@ -79,6 +79,9 @@ class OnlinePlayer(Player):
 		self.isOnline = True
 		self.connection = connection
 
+	def __del__(self):
+		self.connection.close()
+
 	# Gets the opponents move from the network.
 	#
 	# Returns an X/Y coord of that move (click position).
@@ -89,6 +92,6 @@ class OnlinePlayer(Player):
 	# Sends the local player's move to the opponent.
 	#
 	# Returns nothing.
-	def sendMove(event, pos):
+	def sendMove(self, event, pos):
 
 		return None
