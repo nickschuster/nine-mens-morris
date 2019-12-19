@@ -67,7 +67,7 @@ def getPlayerOne(number, sprite):
 	else:
 		return OnlinePlayer(CONNECTION, number, sprite)
 
-def getPlayerTwo():
+def getPlayerTwo(number, sprite):
 	if PLAYER_TYPE == "H":
 		return OnlinePlayer(CONNECTION, number, sprite)
 	else:
