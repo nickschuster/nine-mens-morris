@@ -263,7 +263,7 @@ def newMultiGame(display, clock):
     if networkmanager.setUpConnection():
         # Hide menu on game start
         display = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_HEIGHT))
-        game = Game(display, clock, MUTLI)
+        game = Game(display, clock, MULTI)
         win = game.start()
         displayWin(win, display)
 
