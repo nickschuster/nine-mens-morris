@@ -61,21 +61,22 @@ def setUpConnection():
 		print(e)
 		return False
 
-def getPlayerOne():
+def getPlayerOne(number, sprite):
 	if PLAYER_TYPE == "H":
-		return Player()
+		return Player(number, sprite)
 	else:
-		return OnlinePlayer(CONNECTION)
+		return OnlinePlayer(CONNECTION, number, sprite)
 
 def getPlayerTwo():
 	if PLAYER_TYPE == "H":
-		return OnlinePlayer(CONNECTION)
+		return OnlinePlayer(CONNECTION, number, sprite)
 	else:
-		return Player()
+		return Player(number, sprite)
 
 class OnlinePlayer(Player):
 	# Constructor
-	def __init__(self, connection):
+	def __init__(self, connection, number, sprite):
+		super().__init__(number, sprite)
 		self.isOnline = True
 		self.connection = connection
 

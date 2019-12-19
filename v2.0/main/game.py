@@ -39,8 +39,8 @@ class Game:
             self.playerTwo = Agent(self.PLAYER_TWO, self.PLAYER_TWO_IMG, self.board.piecesOnBoard)
             self.playerOne = Player(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
         elif gameType == self.MULTI:
-            self.playerTwo = networkmanager.getPlayerTwo()
-            self.playerOne = networkmanager.getPlayerOne()
+            self.playerTwo = networkmanager.getPlayerTwo(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
+            self.playerOne = networkmanager.getPlayerOne(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
 
         self.turn = self.playerOne
         self.clock = clock
