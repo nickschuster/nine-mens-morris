@@ -97,6 +97,5 @@ class OnlinePlayer(Player):
 	#
 	# Returns nothing.
 	def sendMove(self, pos):
-		print(coords)
 		self.connection.sendall(struct.pack('!H', int(pos[0])))
 		self.connection.sendall(struct.pack('!H', int(pos[1])))

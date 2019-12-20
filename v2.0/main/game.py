@@ -131,9 +131,9 @@ class Game:
 
                         # Returns an xy coord coord
                         move = self.turn.getAction()
-                        # pygame.event.clear()
-                        # action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.board.XY_POINTS[randomMove])
-                        # pygame.event.post(action)
+                        pygame.event.clear()
+                        action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
+                        pygame.event.post(action)
 
 
 
