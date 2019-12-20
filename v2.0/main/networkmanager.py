@@ -86,13 +86,18 @@ class OnlinePlayer(Player):
 	# Gets the opponents move from the network.
 	#
 	# Returns an X/Y coord of that move (click position).
-	def getAction(self, pos):
-
-		return 10
+	def getAction(self):
+		xPos = struct.unpack('!H', self.connection.recv(2))[0]
+		yPos = struct.unpack('!H', self.connection.recv(2))[0]
+		coords = (xPos, yPos)
+		print(coords)
+		return coords
 
 	# Sends the local player's move to the opponent.
 	#
 	# Returns nothing.
-	def sendMove(self, event, pos):
-
-		return None
+	def sendMove(self, pos):
+		coords = pos.split(", ")
+		print(coords)
+		self.connection.sendall(struct.pack('!H', int(coords[0])))
+		self.connection.sendall(struct.pack('!H', int(coords[1])))
