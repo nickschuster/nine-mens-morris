@@ -26,7 +26,6 @@ def setUpConnection():
 		sock.connect((SERVER, PORT))
 		# Player type
 		PLAYER_TYPE = sock.recv(1).decode('utf-8')
-		print("here")
 		print(PLAYER_TYPE)
 		if PLAYER_TYPE == "C":
 			# Host IP address
@@ -89,8 +88,7 @@ class OnlinePlayer(Player):
 	def getAction(self):
 		xPos = struct.unpack('!H', self.connection.recv(2))[0]
 		yPos = struct.unpack('!H', self.connection.recv(2))[0]
-		coords = (xPos, yPos)
-		print(coords)
+		coords = [xPos, yPos]
 		return coords
 
 	# Sends the local player's move to the opponent.

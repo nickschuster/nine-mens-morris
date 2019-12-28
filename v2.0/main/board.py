@@ -164,8 +164,7 @@ class Board:
     #
     # Returns nothing
     def takePiece(self, count, oppPlayer, player):
-        canRemove = self.calculateRemoveable(oppPlayer)    
-        print(canRemove)  
+        canRemove = self.calculateRemoveable(oppPlayer)      
         while count != 0 and canRemove:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

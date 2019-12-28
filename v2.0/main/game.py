@@ -1,5 +1,6 @@
 import pygame
 import networkmanager
+import time
 from networkmanager import OnlinePlayer
 from board import Board
 from player import Player
@@ -41,6 +42,7 @@ class Game:
         elif gameType == self.MULTI:
             self.playerTwo = networkmanager.getPlayerTwo(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
             self.playerOne = networkmanager.getPlayerOne(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
+            self.processed = True
 
         self.turn = self.playerOne
         self.clock = clock
@@ -102,6 +104,7 @@ class Game:
                         if self.gameType == self.MULTI:
                             if hasattr(self.turn, 'isOnline'):
                                 self.turn.sendMove(event.pos)
+                                self.processed = True
 
                         # Update game phase
                         if self.board.numPieces == self.MAX_PIECES:
@@ -128,12 +131,11 @@ class Game:
                         pygame.event.post(action)
                 elif self.gameType == self.MULTI:
                     if hasattr(self.turn, 'isOnline'):
-
-                        # Returns an xy coord coord
-                        move = self.turn.getAction()
-                        pygame.event.clear()
-                        action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
-                        pygame.event.post(action)
+                        if self.processed:
+                            move = self.turn.getAction()
+                            action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
+                            pygame.event.post(action)
+                            self.processed = False
 
 
 
