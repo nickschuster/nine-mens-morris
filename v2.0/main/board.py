@@ -98,6 +98,7 @@ class Board:
                                     self.updateBoard()
                                     if hasattr(oppPlayer, 'isOnline'):
                                         oppPlayer.sendMove(event.pos)
+                                        player.processed = True
                                     return True
                                 else:
                                     self.updateBoard()
@@ -109,8 +110,11 @@ class Board:
                             action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[move])
                             pygame.event.post(action)
                         elif hasattr(player, 'isOnline'):
-                            move = player.getAction()
-                            #TODO
+                            if player.processed:
+                                move = self.turn.getAction()
+                                action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
+                                pygame.event.post(action)
+                                player.processed = False
                         elif event.type == pygame.MOUSEMOTION:
                             self.updateBoard(index)
                             mouseX, mouseY = event.pos
@@ -183,6 +187,7 @@ class Board:
                                     self.updateBoard()
                                     if hasattr(oppPlayer, 'isOnline'):
                                         oppPlayer.sendMove(event.pos)
+                                        player.processed = True
                 # If its a single player game
                 if hasattr(player, 'isAgent'):
                     move = player.getAction(player.TAKE)
@@ -190,8 +195,11 @@ class Board:
                     action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[move])
                     pygame.event.post(action)
                 elif hasattr(player, 'isOnline'):
-                    move = player.getAction()
-                    # TODO
+                    if player.processed:
+                        move = self.turn.getAction()
+                        action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
+                        pygame.event.post(action)
+                        player.processed = False
 
     # Checks if a specific point on the board is in a mill.
     #

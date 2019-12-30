@@ -78,6 +78,7 @@ class OnlinePlayer(Player):
 		super().__init__(number, sprite)
 		self.isOnline = True
 		self.connection = connection
+		self.processed = True
 
 	def __del__(self):
 		self.connection.close()
@@ -97,3 +98,4 @@ class OnlinePlayer(Player):
 	def sendMove(self, pos):
 		self.connection.sendall(struct.pack('!H', int(pos[0])))
 		self.connection.sendall(struct.pack('!H', int(pos[1])))
+		#self.connection.flush()
