@@ -103,7 +103,7 @@ class Game:
                         if self.gameType == self.MULTI:
                             if hasattr(self.turn, 'isOnline'):
                                 self.turn.sendMove(event.pos)
-                                self.notTurn().processed = True
+                                self.turn.processed = True
 
                         # Update game phase
                         if self.board.numPieces == self.MAX_PIECES:
@@ -131,6 +131,7 @@ class Game:
                 elif self.gameType == self.MULTI:
                     if hasattr(self.turn, 'isOnline'):
                         if self.turn.processed:
+                            print("here")
                             move = self.turn.getAction()
                             action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
                             pygame.event.post(action)

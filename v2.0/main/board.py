@@ -98,7 +98,7 @@ class Board:
                                     self.updateBoard()
                                     if hasattr(oppPlayer, 'isOnline'):
                                         oppPlayer.sendMove(event.pos)
-                                        player.processed = True
+                                        oppPlayer.processed = True
                                     return True
                                 else:
                                     self.updateBoard()
@@ -187,7 +187,7 @@ class Board:
                                     self.updateBoard()
                                     if hasattr(oppPlayer, 'isOnline'):
                                         oppPlayer.sendMove(event.pos)
-                                        player.processed = True
+                                        oppPlayer.processed = True
                 # If its a single player game
                 if hasattr(player, 'isAgent'):
                     move = player.getAction(player.TAKE)
