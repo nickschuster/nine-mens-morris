@@ -65,8 +65,8 @@ class Board:
     def placePiece(self, player, clickPos, oppPlayer):
         # If its an online game send the move.
         if hasattr(oppPlayer, 'isOnline'):
-            self.turn.sendMove(clickPos)
-            self.turn.processed = True
+            self.oppPlayer.sendMove(clickPos)
+            self.oppPlayer.processed = True
 
         valid, index, piece = self.getValid(clickPos)
         if valid and piece == None:
@@ -84,8 +84,8 @@ class Board:
     def movePiece(self, player, clickPos, display, oppPlayer):
         # If its an online game send the move.
         if hasattr(oppPlayer, 'isOnline'):
-            self.turn.sendMove(clickPos)
-            self.turn.processed = True
+            self.oppPlayer.sendMove(clickPos)
+            self.oppPlayer.processed = True
 
         valid, index, piece = self.getValid(clickPos)
         print(clickPos)
@@ -186,8 +186,8 @@ class Board:
     def takePiece(self, count, oppPlayer, player):
         # If its an online game send the move.
         if hasattr(oppPlayer, 'isOnline'):
-            self.turn.sendMove(clickPos)
-            self.turn.processed = True
+            self.oppPlayer.sendMove(clickPos)
+            self.oppPlayer.processed = True
 
         canRemove = self.calculateRemoveable(oppPlayer)      
         while count != 0 and canRemove:
