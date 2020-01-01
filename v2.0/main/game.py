@@ -99,12 +99,6 @@ class Game:
                         self.changeTurn()
                         self.turn.checkWin()
 
-                        # If its an online game send the previous move.
-                        if self.gameType == self.MULTI:
-                            if hasattr(self.turn, 'isOnline'):
-                                self.turn.sendMove(event.pos)
-                                self.turn.processed = True
-
                         # Update game phase
                         if self.board.numPieces == self.MAX_PIECES:
                             self.playerOne.updatePhase(self.turn.MOVING_PHASE)
