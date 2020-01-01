@@ -62,7 +62,7 @@ class Board:
     # In phase one place a piece on the board.
     #
     # Returns true or false depending on if a piece was placed.
-    def placePiece(self, player, clickPos):
+    def placePiece(self, player, clickPos, oppPlayer):
         # If its an online game send the move.
         if hasattr(oppPlayer, 'isOnline'):
             self.turn.sendMove(clickPos)
