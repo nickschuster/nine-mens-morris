@@ -218,11 +218,10 @@ class Board:
                 elif hasattr(player, 'isOnline'):
                     print("takePiece getting move", player.processed)
                     if player.processed:
-                        move = self.turn.getAction()
+                        move = player.getAction()
                         action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
                         pygame.event.post(action)
                         player.processed = False
-                        print(move)
 
     # Checks if a specific point on the board is in a mill.
     #
