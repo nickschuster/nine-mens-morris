@@ -184,8 +184,11 @@ class Board:
     #
     # Returns nothing
     def takePiece(self, count, oppPlayer, player):
+        # Set up player if its an online game
+        if hasattr(player, 'isOnline'):
+            player.processed = True
+
         canRemove = self.calculateRemoveable(oppPlayer)
-        print(hasattr(player, 'isOnline'))     
         while count != 0 and canRemove:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
