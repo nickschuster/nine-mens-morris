@@ -110,7 +110,7 @@ class Board:
                                     
                                     self.updateBoard()
                                     if hasattr(oppPlayer, 'isOnline'):
-                                        print("sending")
+                                        print("sending movepiece")
                                         oppPlayer.sendMove(event.pos)
                                         oppPlayer.processed = True
                                     return True
@@ -126,7 +126,7 @@ class Board:
                         elif hasattr(player, 'isOnline'):
                             print(player.processed)
                             if player.processed:
-                                print("getting")
+                                print("getting movepiece")
                                 move = self.turn.getAction()
                                 action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
                                 pygame.event.post(action)
@@ -184,7 +184,8 @@ class Board:
     #
     # Returns nothing
     def takePiece(self, count, oppPlayer, player):
-        canRemove = self.calculateRemoveable(oppPlayer)      
+        canRemove = self.calculateRemoveable(oppPlayer)
+        print(hasattr(player, 'isOnline'))     
         while count != 0 and canRemove:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -202,6 +203,7 @@ class Board:
                                     count -= 1
                                     self.updateBoard()
                                     if hasattr(oppPlayer, 'isOnline'):
+                                        print("takePiece sending move")
                                         oppPlayer.sendMove(event.pos)
                                         oppPlayer.processed = True
                 # If its a single player game
@@ -211,11 +213,13 @@ class Board:
                     action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=self.XY_POINTS[move])
                     pygame.event.post(action)
                 elif hasattr(player, 'isOnline'):
+                    print("takePiece getting move", player.processed)
                     if player.processed:
                         move = self.turn.getAction()
                         action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
                         pygame.event.post(action)
                         player.processed = False
+                        print(move)
 
     # Checks if a specific point on the board is in a mill.
     #
