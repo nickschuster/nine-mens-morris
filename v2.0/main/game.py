@@ -40,6 +40,8 @@ class Game:
             self.playerTwo = Agent(self.PLAYER_TWO, self.PLAYER_TWO_IMG, self.board.piecesOnBoard)
             self.playerOne = Player(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
         elif gameType == self.MULTI:
+            # Loop to ensure getAction is checked often
+            pygame.time.set_timer(pygame.USEREVENT, 100)
             self.playerTwo = networkmanager.getPlayerTwo(self.PLAYER_TWO, self.PLAYER_TWO_IMG)
             self.playerOne = networkmanager.getPlayerOne(self.PLAYER_ONE, self.PLAYER_ONE_IMG)
 
@@ -126,10 +128,14 @@ class Game:
                     if hasattr(self.turn, 'isOnline'):
                         if self.turn.processed:
                             print("getting initial move")
-                            move = self.turn.getAction()
-                            action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
-                            pygame.event.post(action)
-                            self.turn.processed = False
+                            try:
+                                move = self.turn.getAction()
+                                action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
+                                pygame.event.post(action)
+                                self.turn.processed = False
+                            except:
+                                return self.getWin(self.notTurn())
+
 
 
 

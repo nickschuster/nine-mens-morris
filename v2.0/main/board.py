@@ -90,6 +90,7 @@ class Board:
         valid, index, piece = self.getValid(clickPos)
         print(clickPos)
         if valid and piece != None:
+            print("valid")
             if piece.ownedBy == player.number:
                 mouseX, mouseY = pygame.mouse.get_pos()
                 notPlaced = True
@@ -117,7 +118,7 @@ class Board:
                                 else:
                                     self.updateBoard()
                                     return False
-                        # If its a single player game
+                        # Game type options
                         if hasattr(player, 'isAgent'):
                             move = player.getAction(player.PUTDOWN)
                             pygame.event.clear()
@@ -127,10 +128,14 @@ class Board:
                             print(player.processed)
                             if player.processed:
                                 print("getting movepiece")
-                                move = self.turn.getAction()
-                                action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
-                                pygame.event.post(action)
-                                player.processed = False
+                                try:
+                                    move = player.getAction()
+                                    action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
+                                    pygame.event.post(action)
+                                    player.processed = False
+                                except:
+                                    player.lost = True
+                                    return True
                         elif event.type == pygame.MOUSEMOTION:
                             self.updateBoard(index)
                             mouseX, mouseY = event.pos
@@ -195,12 +200,14 @@ class Board:
                     pygame.quit()
                     quit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    print("Piece taken")
                     valid, XYIndex, piece = self.getValid(event.pos)
                     if valid:
                         if piece != None:
                             if piece.ownedBy == oppPlayer.number:
                                 row, col = self.getRelativePosition(XYIndex)
                                 if not self.inMill(row, col, oppPlayer):
+                                    print("valid")
                                     del self.piecesOnBoard[XYIndex]
                                     oppPlayer.numPieces -= 1
                                     count -= 1
@@ -218,10 +225,14 @@ class Board:
                 elif hasattr(player, 'isOnline'):
                     print("takePiece getting move", player.processed)
                     if player.processed:
-                        move = player.getAction()
-                        action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
-                        pygame.event.post(action)
-                        player.processed = False
+                        try:
+                            move = player.getAction()
+                            action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
+                            pygame.event.post(action)
+                            player.processed = False
+                        except:
+                            player.lost = True
+                            return None
 
     # Checks if a specific point on the board is in a mill.
     #
