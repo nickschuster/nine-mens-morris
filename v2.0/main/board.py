@@ -84,8 +84,12 @@ class Board:
     def movePiece(self, player, clickPos, display, oppPlayer):
         # If its an online game send the move.
         if hasattr(oppPlayer, 'isOnline'):
+            print("notTurn")
             oppPlayer.sendMove(clickPos)
             oppPlayer.processed = True
+        elif hasattr(player, 'isOnline'):
+            print("turn")
+            player.processed = True
 
         valid, index, piece = self.getValid(clickPos)
         print(clickPos)
@@ -95,7 +99,7 @@ class Board:
                 mouseX, mouseY = pygame.mouse.get_pos()
                 notPlaced = True
                 while notPlaced:
-                    print("looping")
+                    #print("looping")
                     for event in pygame.event.get():
                         print(event)
                         if event.type == pygame.QUIT:

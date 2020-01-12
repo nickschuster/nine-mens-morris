@@ -133,7 +133,8 @@ class Game:
                                 action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)
                                 pygame.event.post(action)
                                 self.turn.processed = False
-                            except:
+                            except Exception as e:
+                                print(e)
                                 return self.getWin(self.notTurn())
 
 
