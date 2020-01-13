@@ -127,7 +127,6 @@ class Game:
                 elif self.gameType == self.MULTI:
                     if hasattr(self.turn, 'isOnline'):
                         if self.turn.processed:
-                            print("getting initial move")
                             try:
                                 move = self.turn.getAction()
                                 action = pygame.event.Event(pygame.MOUSEBUTTONDOWN, pos=move)

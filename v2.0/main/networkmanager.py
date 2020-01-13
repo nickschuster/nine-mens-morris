@@ -26,7 +26,6 @@ def setUpConnection():
 		sock.connect((SERVER, PORT))
 		# Player type
 		PLAYER_TYPE = sock.recv(1).decode('utf-8')
-		print(PLAYER_TYPE)
 		if PLAYER_TYPE == "C":
 			# Host IP address
 			hostParts = []
