@@ -1,4 +1,4 @@
-This is the lesser known board game Nine Men's Morris recreated in python using pygame.
+This is the lesser known board game Nine Men's Morris recreated in python using pygame. There is a cooresponding server repo for networking multiplayer found [here](https://github.com/nickschuster/nine-mens-server).
 
 ### Dependencies
 
